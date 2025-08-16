@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>活动实时反馈</title>
+    <title>活动实时反馈 / Event Live Feedback</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -31,17 +31,17 @@
             color: #3f51b5;
             text-align: center;
             margin: 0 0 25px 0;
+            line-height: 1.3;
         }
-        .form-section {
-            margin-bottom: 25px;
-        }
+        .form-section { margin-bottom: 25px; }
         .question-title {
             font-size: 1.1em;
             font-weight: 600;
             margin-bottom: 15px;
             color: #555;
+            line-height: 1.4;
         }
-        .question-title .optional-tag {
+        .optional-tag {
             font-size: 0.8em;
             font-weight: normal;
             color: #999;
@@ -49,7 +49,7 @@
         .satisfaction-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
         }
         .satisfaction-options label {
             cursor: pointer;
@@ -60,6 +60,14 @@
             font-size: 1em;
             transition: all 0.2s ease-in-out;
             text-align: center;
+            line-height: 1.3;
+        }
+        /* Style for the smaller English text */
+        .lang-en {
+            display: block;
+            font-size: 0.8em;
+            color: #555;
+            margin-top: 2px;
         }
         .satisfaction-options input[type="radio"] { display: none; }
         .satisfaction-options input[type="radio"]:checked + label {
@@ -69,14 +77,12 @@
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(76, 110, 245, 0.4);
         }
+        .satisfaction-options input[type="radio"]:checked + label .lang-en {
+            color: #e0e0e0;
+        }
         input[type="text"], textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 1em;
-            margin-top: 5px;
-            box-sizing: border-box;
+            width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px;
+            font-size: 1em; margin-top: 5px; box-sizing: border-box;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         input[type="text"]:focus, textarea:focus {
@@ -84,21 +90,14 @@
             box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.2);
             outline: none;
         }
-        button {
-            display: block;
-            width: 100%;
-            padding: 15px;
+        button#submit-btn {
+            display: block; width: 100%; padding: 15px;
             background: linear-gradient(45deg, #4776e6, #8e54e9);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.2em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            color: white; border: none; border-radius: 10px; font-size: 1.2em;
+            font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
             margin-top: 15px;
         }
-        button:hover {
+        button#submit-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
@@ -106,33 +105,31 @@
 </head>
 <body>
     <div class="container">
-        <h1>活动实时反馈</h1>
+        <h1>活动实时反馈<br><span class="lang-en" style="font-size:0.7em; font-weight:normal;">Event Live Feedback</span></h1>
+        
         <div class="form-section">
-            <div class="question-title">1. 您对本次活动的整体满意度如何？</div>
+            <div class="question-title">1. 您对本次活动的整体满意度如何？<br><span class="lang-en">How satisfied are you with this event?</span></div>
             <form id="satisfaction-form" class="satisfaction-options">
-                <input type="radio" id="option1" name="satisfaction" value="非常好"><label for="option1">🎉 非常好</label>
-                <input type="radio" id="option2" name="satisfaction" value="不错"><label for="option2">👍 不错</label>
-                <input type="radio" id="option3" name="satisfaction" value="一般"><label for="option3">🙂 一般</label>
-                <input type="radio" id="option4" name="satisfaction" value="有待改进"><label for="option4">🤔 有待改进</label>
+                <input type="radio" id="option1" name="satisfaction" value="非常好"><label for="option1">🎉 非常好<br><span class="lang-en">Excellent</span></label>
+                <input type="radio" id="option2" name="satisfaction" value="不错"><label for="option2">👍 不错<br><span class="lang-en">Good</span></label>
+                <input type="radio" id="option3" name="satisfaction" value="一般"><label for="option3">🙂 一般<br><span class="lang-en">Average</span></label>
+                <input type="radio" id="option4" name="satisfaction" value="有待改进"><label for="option4">🤔 有待改进<br><span class="lang-en">Needs Improvement</span></label>
             </form>
         </div>
         <div class="form-section">
-            <div class="question-title">2. 请用一个词语描述您的感受。</div>
-            <input type="text" id="wordcloud-text" placeholder="例如：有趣、充实、启发...">
+            <div class="question-title">2. 请用一个词语描述您的感受。<br><span class="lang-en">Describe your feeling in one word.</span></div>
+            <input type="text" id="wordcloud-text" placeholder="例如：有趣、充实 / e.g., Fun, Inspiring...">
         </div>
         <div class="form-section">
-            <div class="question-title">3. 您对活动有什么建议？<span class="optional-tag">(选填)</span></div>
-            <textarea id="suggestion-text" rows="4" placeholder="您的建议是我们进步的动力..."></textarea>
+            <div class="question-title">3. 您对活动有什么建议？ <span class="optional-tag">(选填 / Optional)</span><br><span class="lang-en">Any suggestions for us?</span></div>
+            <textarea id="suggestion-text" rows="4" placeholder="您的建议是我们进步的动力 / Your suggestions help us improve..."></textarea>
         </div>
-        <button onclick="submitFeedback()">提 交 反 馈</button>
+        <button id="submit-btn" onclick="submitFeedback()">提 交 / SUBMIT</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        // ==================================================================
-        // 请将您的 Firebase 配置粘贴到此处
-        // ==================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyCf8mv55m8ZNIZ19mJwBweVd1V-e7DGlAg",
             authDomain: "my-live-vote-f1d26.firebaseapp.com",
@@ -153,8 +150,8 @@
             const wordcloudText = document.getElementById('wordcloud-text').value.trim();
             const suggestionText = document.getElementById('suggestion-text').value.trim();
 
-            if (!satisfactionOption) { alert('请选择您的满意度！'); return; }
-            if (!wordcloudText) { alert('请用一个词语描述您的感受！'); return; }
+            if (!satisfactionOption) { alert('请选择您的满意度！\nPlease select your satisfaction level!'); return; }
+            if (!wordcloudText) { alert('请用一个词语描述您的感受！\nPlease describe your feeling in one word!'); return; }
 
             satisfactionRef.child(satisfactionOption.value).transaction(current => (current || 0) + 1);
             wordcloudRef.push({ word: wordcloudText });
@@ -164,7 +161,7 @@
             document.getElementById('wordcloud-text').value = '';
             document.getElementById('suggestion-text').value = '';
             
-            alert('感谢您的参与！反馈已成功提交。');
+            alert('感谢您的参与！反馈已成功提交。\nThank you! Your feedback has been submitted successfully.');
         }
     </script>
 </body>
