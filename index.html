@@ -5,100 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>活动实时反馈</title>
     <style>
-        /* 全局样式和字体 */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-            background-color: #f0f2f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #333;
             margin: 0;
             padding: 20px 15px;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             min-height: 100vh;
-        }
-
-        /* 主容器 */
-        .container {
-            width: 100%;
-            max-width: 600px;
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
             box-sizing: border-box;
         }
-
-        /* 标题样式 */
-        h1, h2 {
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 25px;
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
         }
-
         h1 {
             font-size: 1.8em;
-            color: #1a237e; /* 深蓝色 */
+            color: #3f51b5;
+            text-align: center;
+            margin: 0 0 25px 0;
         }
-
-        h2 {
-            font-size: 1.3em;
-            color: #3949ab; /* 柔和蓝 */
-            border-bottom: 2px solid #e8eaf6;
-            padding-bottom: 10px;
-        }
-        
-        /* 表单区域 */
         .form-section {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
-
         .question-title {
             font-size: 1.1em;
             font-weight: 600;
             margin-bottom: 15px;
-            color: #5c6bc0;
+            color: #555;
         }
-        
         .question-title .optional-tag {
             font-size: 0.8em;
             font-weight: normal;
             color: #999;
         }
-
-        /* 问题一：满意度 */
         .satisfaction-options {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
-
         .satisfaction-options label {
             cursor: pointer;
-            padding: 12px 15px;
-            border-radius: 50px;
-            background-color: #f8f9fa;
+            padding: 12px 5px;
+            border-radius: 10px;
+            background-color: #f1f3f5;
             border: 1px solid #dee2e6;
             font-size: 1em;
-            transition: all 0.3s ease;
-            flex-grow: 1;
+            transition: all 0.2s ease-in-out;
             text-align: center;
         }
-
-        .satisfaction-options input[type="radio"] {
-            display: none; /* 隐藏原始单选按钮 */
-        }
-
+        .satisfaction-options input[type="radio"] { display: none; }
         .satisfaction-options input[type="radio"]:checked + label {
-            background-color: #3f51b5;
+            background-color: #4c6ef5;
             color: white;
-            border-color: #3f51b5;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(63, 81, 181, 0.4);
+            border-color: #4c6ef5;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(76, 110, 245, 0.4);
         }
-
-        /* 问题二和三：输入框/文本域 */
         input[type="text"], textarea {
             width: 100%;
             padding: 12px;
@@ -109,136 +79,35 @@
             box-sizing: border-box;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
-
         input[type="text"]:focus, textarea:focus {
-            border-color: #3f51b5;
-            box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+            border-color: #4c6ef5;
+            box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.2);
             outline: none;
         }
-
-        /* 提交按钮 */
         button {
             display: block;
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(45deg, #5c6bc0, #3f51b5);
+            padding: 15px;
+            background: linear-gradient(45deg, #4776e6, #8e54e9);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1.2em;
             font-weight: bold;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            margin-top: 20px;
+            margin-top: 15px;
         }
-
         button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(63, 81, 181, 0.5);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
-        
-        /* 结果展示区 */
-        .results-section {
-            margin-top: 40px;
-        }
-
-        /* 满意度结果条 */
-        .result-bar-container {
-            margin: 12px 0;
-        }
-
-        .result-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-size: 0.9em;
-        }
-
-        .result-bar {
-            background-color: #e9ecef;
-            border-radius: 8px;
-            height: 20px;
-            overflow: hidden;
-        }
-
-        .result-bar div {
-            background-color: #7986cb;
-            height: 100%;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 10px;
-            font-size: 0.8em;
-            white-space: nowrap;
-            box-sizing: border-box;
-            transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        /* 词云 */
-        #wordcloud-container {
-            width: 100%;
-            height: 300px;
-            border: 2px dashed #d0d0d0;
-            border-radius: 8px;
-            margin-top: 10px;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* 建议列表 */
-        #suggestions-list {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 10px;
-        }
-        
-        #suggestions-list li {
-            background-color: #f8f9fa;
-            border-left: 4px solid #7986cb;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 4px;
-        }
-        
-        /* 加载和空状态提示 */
-        .placeholder-text {
-            color: #aaa;
-            font-size: 1.1em;
-        }
-        
-        /* 二维码 */
-        #qrcode {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        #qrcode img {
-            max-width: 150px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-        }
-        
-        #qrcode h3 {
-            font-size: 1em;
-            color: #555;
-            margin: 10px 0 0;
-        }
-
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>活动实时反馈</h1>
-        
-        <div id="qrcode"></div>
-
-        <!-- 问题提交区 -->
         <div class="form-section">
-            <!-- 问题一 -->
             <div class="question-title">1. 您对本次活动的整体满意度如何？</div>
             <form id="satisfaction-form" class="satisfaction-options">
                 <input type="radio" id="option1" name="satisfaction" value="非常好"><label for="option1">🎉 非常好</label>
@@ -247,44 +116,22 @@
                 <input type="radio" id="option4" name="satisfaction" value="有待改进"><label for="option4">🤔 有待改进</label>
             </form>
         </div>
-
         <div class="form-section">
-            <!-- 问题二 -->
-            <div class="question-title">2. 请用一个词语来描述这次活动的感受。</div>
+            <div class="question-title">2. 请用一个词语描述您的感受。</div>
             <input type="text" id="wordcloud-text" placeholder="例如：有趣、充实、启发...">
         </div>
-
         <div class="form-section">
-            <!-- 问题三 -->
             <div class="question-title">3. 您对活动有什么建议？<span class="optional-tag">(选填)</span></div>
-            <textarea id="suggestion-text" rows="4" placeholder="请在此输入您的宝贵建议..."></textarea>
+            <textarea id="suggestion-text" rows="4" placeholder="您的建议是我们进步的动力..."></textarea>
         </div>
-
-        <button onclick="submitFeedback()">提 交</button>
-
-        <!-- 结果展示区 -->
-        <div class="results-section">
-            <h2>实时反馈结果</h2>
-            
-            <h3 style="text-align:left; color:#555;">满意度统计</h3>
-            <div id="satisfaction-results"><p class="placeholder-text">正在加载数据...</p></div>
-            
-            <h3 style="text-align:left; color:#555; margin-top: 30px;">感受词云</h3>
-            <div id="wordcloud-container"><p class="placeholder-text">暂无数据</p></div>
-
-            <h3 style="text-align:left; color:#555; margin-top: 30px;">建议汇总</h3>
-            <ul id="suggestions-list"><li class="placeholder-text">暂无建议</li></ul>
-        </div>
+        <button onclick="submitFeedback()">提 交 反 馈</button>
     </div>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
     <script>
         // ==================================================================
         // 请将您的 Firebase 配置粘贴到此处
-        // 这是您提供的示例配置，请确保它是正确的
         // ==================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyCf8mv55m8ZNIZ19mJwBweVd1V-e7DGlAg",
@@ -295,158 +142,30 @@
             messagingSenderId: "881093976847",
             appId: "1:881093976847:web:79b39e5c4b697c93d2d47a"
         };
-
-        // 初始化 Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-
-        // 数据库引用
         const satisfactionRef = database.ref('satisfaction');
         const wordcloudRef = database.ref('wordcloudWords');
         const suggestionsRef = database.ref('suggestions');
 
-        // 更新满意度投票结果
-        function updateSatisfactionResults(data) {
-            const container = document.getElementById('satisfaction-results');
-            container.innerHTML = '';
-            const totalVotes = Object.values(data).reduce((sum, count) => sum + count, 0);
-
-            if (totalVotes === 0) {
-                container.innerHTML = '<p class="placeholder-text">暂无投票数据。</p>';
-                return;
-            }
-
-            const options = ['非常好', '不错', '一般', '有待改进'];
-            options.forEach(option => {
-                const count = data[option] || 0;
-                const percentage = totalVotes === 0 ? 0 : (count / totalVotes) * 100;
-                
-                const resultElement = document.createElement('div');
-                resultElement.className = 'result-bar-container';
-                resultElement.innerHTML = `
-                    <div class="result-label">
-                        <span>${option}</span>
-                        <span>${count}票 (${percentage.toFixed(1)}%)</span>
-                    </div>
-                    <div class="result-bar">
-                        <div style="width: ${percentage}%;"></div>
-                    </div>
-                `;
-                container.appendChild(resultElement);
-            });
-        }
-
-        // 生成词云
-        function generateWordCloud(data) {
-            const container = document.getElementById('wordcloud-container');
-            container.innerHTML = ''; // 清空容器
-            const allWords = Object.values(data || {}).map(item => item.word);
-
-            if (allWords.length === 0) {
-                container.innerHTML = '<p class="placeholder-text">暂无数据</p>';
-                return;
-            }
-
-            const wordFrequencies = {};
-            allWords.forEach(word => {
-                if (word && word.length > 1) { // 确保词语存在且长度大于1
-                    wordFrequencies[word] = (wordFrequencies[word] || 0) + 1;
-                }
-            });
-
-            const list = Object.entries(wordFrequencies).map(([text, weight]) => [text, weight * 10]);
-
-            if (list.length > 0) {
-                WordCloud(container, {
-                    list: list,
-                    gridSize: 12,
-                    weightFactor: 4,
-                    fontFamily: '微软雅黑, sans-serif',
-                    color: 'random-dark',
-                    backgroundColor: '#fff',
-                    minSize: 12,
-                    shuffle: false,
-                    rotateRatio: 0.3
-                });
-            } else {
-                container.innerHTML = '<p class="placeholder-text">没有足够有效的词语</p>';
-            }
-        }
-        
-        // 更新建议列表
-        function updateSuggestions(data) {
-            const list = document.getElementById('suggestions-list');
-            list.innerHTML = ''; // 清空列表
-            if (!data) {
-                list.innerHTML = '<li class="placeholder-text">暂无建议</li>';
-                return;
-            }
-            
-            Object.values(data).forEach(item => {
-                const listItem = document.createElement('li');
-                listItem.textContent = item.suggestion;
-                list.prepend(listItem); // 后提交的显示在最前面
-            });
-        }
-
-        // 提交反馈
         function submitFeedback() {
             const satisfactionOption = document.querySelector('input[name="satisfaction"]:checked');
             const wordcloudText = document.getElementById('wordcloud-text').value.trim();
             const suggestionText = document.getElementById('suggestion-text').value.trim();
 
-            if (!satisfactionOption) {
-                alert('请选择您的满意度！');
-                return;
-            }
-            if (!wordcloudText) {
-                alert('请用一个词语描述您的感受！');
-                return;
-            }
+            if (!satisfactionOption) { alert('请选择您的满意度！'); return; }
+            if (!wordcloudText) { alert('请用一个词语描述您的感受！'); return; }
 
-            // 1. 更新满意度计数
-            satisfactionRef.child(satisfactionOption.value).transaction(currentCount => (currentCount || 0) + 1);
+            satisfactionRef.child(satisfactionOption.value).transaction(current => (current || 0) + 1);
+            wordcloudRef.push({ word: wordcloudText });
+            if (suggestionText) { suggestionsRef.push({ suggestion: suggestionText }); }
 
-            // 2. 推送词云词语
-            wordcloudRef.push({ word: wordcloudText, timestamp: Date.now() });
-
-            // 3. 如果有建议，则推送
-            if (suggestionText) {
-                suggestionsRef.push({ suggestion: suggestionText, timestamp: Date.now() });
-            }
-
-            // 清空表单
-            satisfactionOption.checked = false;
+            document.getElementById('satisfaction-form').reset();
             document.getElementById('wordcloud-text').value = '';
             document.getElementById('suggestion-text').value = '';
             
-            alert('感谢您的反馈！');
+            alert('感谢您的参与！反馈已成功提交。');
         }
-
-        // 实时监听数据库变化
-        satisfactionRef.on('value', (snapshot) => {
-            const data = snapshot.val() || { '非常好': 0, '不错': 0, '一般': 0, '有待改进': 0 };
-            updateSatisfactionResults(data);
-        });
-
-        wordcloudRef.on('value', (snapshot) => {
-            generateWordCloud(snapshot.val());
-        });
-        
-        suggestionsRef.on('value', (snapshot) => {
-            updateSuggestions(snapshot.val());
-        });
-
-        // 页面加载时生成二维码
-        window.onload = () => {
-             const qrCodeContainer = document.getElementById('qrcode');
-             const pageUrl = window.location.href;
-             const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pageUrl)}`;
-             qrCodeContainer.innerHTML = `
-                <img src="${qrApiUrl}" alt="QR Code">
-                <h3>手机扫描二维码参与</h3>
-             `;
-        };
     </script>
 </body>
 </html>
