@@ -3,135 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>活动实时反馈</title>
+    <title>MBPTS Tech Journey - 实时反馈</title>
     <style>
+        /* --- Google Font for a cleaner look (optional) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+        /* --- General Layout --- */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f6f9; /* Light gray background */
             color: #333;
             margin: 0;
-            padding: 20px 15px;
+            padding: 20px 40px;
+            box-sizing: border-box;
+            overflow: hidden; /* Hide scrollbars */
+        }
+
+        /* --- Header --- */
+        .header {
+            text-align: center;
+            padding: 10px 0 25px 0;
+        }
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        /* --- Main Content Layout --- */
+        .main-container {
+            display: flex;
+            gap: 40px;
+            height: calc(100vh - 140px); /* Adjust based on header height and padding */
+        }
+
+        /* --- Card Styling --- */
+        .data-panel {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 25px 35px;
+            box-shadow: 0 6px 25px rgba(40, 50, 70, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        .results-panel {
+            flex: 1;
+        }
+        .wordcloud-panel {
+            flex: 1.5;
+        }
+        
+        /* --- Panel Titles --- */
+        .panel-title {
+            font-size: 2em;
+            font-weight: 500;
+            color: #34495e;
+            margin: 0 0 25px 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        /* --- Satisfaction Results Styling --- */
+        #satisfaction-results {
+            padding-top: 10px;
+        }
+        .result-bar-container {
+            margin-bottom: 30px;
+        }
+        .result-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 1.6em;
+            font-weight: 500;
+            color: #555;
+        }
+        .result-bar {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            height: 28px;
+            overflow: hidden;
+        }
+        .result-bar div {
+            background: linear-gradient(90deg, #4da1ff, #007bff);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- Word Cloud Styling --- */
+        #wordcloud-container {
+            flex-grow: 1; /* Make it fill the available space */
+            width: 100%;
+            min-height: 400px;
+        }
+
+        /* --- Placeholder for empty state --- */
+        .placeholder-text {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-        .container {
-            width: 100%;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(10px);
-        }
-        h1 {
+            height: 100%;
             font-size: 1.8em;
-            color: #3f51b5;
-            text-align: center;
-            margin: 0 0 25px 0;
-        }
-        .form-section {
-            margin-bottom: 25px;
-        }
-        .question-title {
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #555;
-        }
-        .question-title .optional-tag {
-            font-size: 0.8em;
-            font-weight: normal;
-            color: #999;
-        }
-        .satisfaction-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .satisfaction-options label {
-            cursor: pointer;
-            padding: 12px 5px;
-            border-radius: 10px;
-            background-color: #f1f3f5;
-            border: 1px solid #dee2e6;
-            font-size: 1em;
-            transition: all 0.2s ease-in-out;
-            text-align: center;
-        }
-        .satisfaction-options input[type="radio"] { display: none; }
-        .satisfaction-options input[type="radio"]:checked + label {
-            background-color: #4c6ef5;
-            color: white;
-            border-color: #4c6ef5;
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(76, 110, 245, 0.4);
-        }
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 1em;
-            margin-top: 5px;
-            box-sizing: border-box;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        input[type="text"]:focus, textarea:focus {
-            border-color: #4c6ef5;
-            box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.2);
-            outline: none;
-        }
-        button {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(45deg, #4776e6, #8e54e9);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.2em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-top: 15px;
-        }
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            color: #bdc3c7;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>活动实时反馈</h1>
-        <div class="form-section">
-            <div class="question-title">1. 您对本次活动的整体满意度如何？</div>
-            <form id="satisfaction-form" class="satisfaction-options">
-                <input type="radio" id="option1" name="satisfaction" value="非常好"><label for="option1">🎉 非常好</label>
-                <input type="radio" id="option2" name="satisfaction" value="不错"><label for="option2">👍 不错</label>
-                <input type="radio" id="option3" name="satisfaction" value="一般"><label for="option3">🙂 一般</label>
-                <input type="radio" id="option4" name="satisfaction" value="有待改进"><label for="option4">🤔 有待改进</label>
-            </form>
+
+    <header class="header">
+        <h1>MBPTS Tech Journey</h1>
+    </header>
+
+    <div class="main-container">
+        <div class="data-panel results-panel">
+            <h2 class="panel-title">满意度统计</h2>
+            <div id="satisfaction-results">
+                <div class="placeholder-text">等待数据...</div>
+            </div>
         </div>
-        <div class="form-section">
-            <div class="question-title">2. 请用一个词语描述您的感受。</div>
-            <input type="text" id="wordcloud-text" placeholder="例如：有趣、充实、启发...">
+        <div class="data-panel wordcloud-panel">
+            <h2 class="panel-title">感受词云</h2>
+            <div id="wordcloud-container">
+                <div class="placeholder-text">等待数据...</div>
+            </div>
         </div>
-        <div class="form-section">
-            <div class="question-title">3. 您对活动有什么建议？<span class="optional-tag">(选填)</span></div>
-            <textarea id="suggestion-text" rows="4" placeholder="您的建议是我们进步的动力..."></textarea>
-        </div>
-        <button onclick="submitFeedback()">提 交 反 馈</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
         // ==================================================================
-        // 请将您的 Firebase 配置粘贴到此处
+        // 请确保您的 Firebase 配置与之前的文件一致
         // ==================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyCf8mv55m8ZNIZ19mJwBweVd1V-e7DGlAg",
@@ -146,26 +153,57 @@
         const database = firebase.database();
         const satisfactionRef = database.ref('satisfaction');
         const wordcloudRef = database.ref('wordcloudWords');
-        const suggestionsRef = database.ref('suggestions');
 
-        function submitFeedback() {
-            const satisfactionOption = document.querySelector('input[name="satisfaction"]:checked');
-            const wordcloudText = document.getElementById('wordcloud-text').value.trim();
-            const suggestionText = document.getElementById('suggestion-text').value.trim();
+        function updateSatisfactionResults(data) {
+            const container = document.getElementById('satisfaction-results');
+            container.innerHTML = '';
+            const total = Object.values(data).reduce((s, c) => s + c, 0);
+            if (total === 0) { container.innerHTML = '<div class="placeholder-text">暂无投票</div>'; return; }
 
-            if (!satisfactionOption) { alert('请选择您的满意度！'); return; }
-            if (!wordcloudText) { alert('请用一个词语描述您的感受！'); return; }
-
-            satisfactionRef.child(satisfactionOption.value).transaction(current => (current || 0) + 1);
-            wordcloudRef.push({ word: wordcloudText });
-            if (suggestionText) { suggestionsRef.push({ suggestion: suggestionText }); }
-
-            document.getElementById('satisfaction-form').reset();
-            document.getElementById('wordcloud-text').value = '';
-            document.getElementById('suggestion-text').value = '';
-            
-            alert('感谢您的参与！反馈已成功提交。');
+            ['非常好', '不错', '一般', '有待改进'].forEach(option => {
+                const count = data[option] || 0;
+                const percentage = total === 0 ? 0 : (count / total) * 100;
+                const el = document.createElement('div');
+                el.className = 'result-bar-container';
+                el.innerHTML = `
+                    <div class="result-label">
+                        <span>${option}</span>
+                        <span>${count}票 (${percentage.toFixed(1)}%)</span>
+                    </div>
+                    <div class="result-bar"><div style="width: ${percentage}%;"></div></div>`;
+                container.appendChild(el);
+            });
         }
+
+        function generateWordCloud(data) {
+            const container = document.getElementById('wordcloud-container');
+            container.innerHTML = '';
+            const words = Object.values(data || {}).map(item => item.word);
+            if (words.length === 0) { container.innerHTML = '<div class="placeholder-text">暂无词语</div>'; return; }
+
+            const freq = {};
+            words.forEach(w => { if(w) freq[w] = (freq[w] || 0) + 1; });
+            const list = Object.entries(freq).map(([text, weight]) => [text, Math.log(weight + 1) * 15]); // Log scale for better visualization
+
+            if (list.length > 0) {
+                WordCloud(container, {
+                    list: list,
+                    gridSize: 14,
+                    weightFactor: 1.5,
+                    fontFamily: "'Noto Sans SC', sans-serif",
+                    color: 'random-dark',
+                    backgroundColor: 'transparent',
+                    minSize: 18,
+                    shuffle: false,
+                    rotateRatio: 0.3
+                });
+            } else {
+                container.innerHTML = '<div class="placeholder-text">暂无有效词语</div>';
+            }
+        }
+
+        satisfactionRef.on('value', snap => updateSatisfactionResults(snap.val() || {}));
+        wordcloudRef.on('value', snap => generateWordCloud(snap.val()));
     </script>
 </body>
 </html>
