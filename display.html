@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实时反馈大屏</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: #ecf0f1;
+            margin: 0;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        .main-container {
+            display: flex;
+            gap: 40px;
+            height: calc(100vh - 80px);
+        }
+        .results-column, .wordcloud-column {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .results-column {
+            flex: 1;
+        }
+        .wordcloud-column {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+        }
+        h2 {
+            font-size: 2.5em;
+            text-align: center;
+            margin: 0 0 30px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        #satisfaction-results, #wordcloud-container {
+            width: 100%;
+            height: 100%;
+        }
+        .result-bar-container { margin: 25px 0; }
+        .result-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 1.5em;
+            font-weight: 500;
+        }
+        .result-bar { background-color: rgba(0, 0, 0, 0.2); border-radius: 10px; height: 30px; }
+        .result-bar div {
+            background: linear-gradient(90deg, #1fa2ff, #12d8fa, #a6ffcb);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        #wordcloud-container {
+            min-height: 400px;
+            flex-grow: 1;
+        }
+        .placeholder-text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-size: 1.8em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <div class="results-column">
+            <h2>满意度统计</h2>
+            <div id="satisfaction-results"><div class="placeholder-text">等待数据...</div></div>
+        </div>
+        <div class="wordcloud-column">
+            <h2>感受词云</h2>
+            <div id="wordcloud-container"><div class="placeholder-text">等待数据...</div></div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        // ==================================================================
+        // 请将您的 Firebase 配置粘贴到此处
+        // ==================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyCf8mv55m8ZNIZ19mJwBweVd1V-e7DGlAg",
+            authDomain: "my-live-vote-f1d26.firebaseapp.com",
+            databaseURL: "https://my-live-vote-f1d26-default-rtdb.firebaseio.com",
+            projectId: "my-live-vote-f1d26",
+            storageBucket: "my-live-vote-f1d26.firebasestorage.app",
+            messagingSenderId: "881093976847",
+            appId: "1:881093976847:web:79b39e5c4b697c93d2d47a"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const satisfactionRef = database.ref('satisfaction');
+        const wordcloudRef = database.ref('wordcloudWords');
+
+        function updateSatisfactionResults(data) {
+            const container = document.getElementById('satisfaction-results');
+            container.innerHTML = '';
+            const total = Object.values(data).reduce((s, c) => s + c, 0);
+            if (total === 0) { container.innerHTML = '<div class="placeholder-text">暂无投票</div>'; return; }
+
+            ['非常好', '不错', '一般', '有待改进'].forEach(option => {
+                const count = data[option] || 0;
+                const percentage = (count / total) * 100;
+                const el = document.createElement('div');
+                el.className = 'result-bar-container';
+                el.innerHTML = `
+                    <div class="result-label"><span>${option}</span><span>${count}票</span></div>
+                    <div class="result-bar"><div style="width: ${percentage}%;"></div></div>`;
+                container.appendChild(el);
+            });
+        }
+
+        function generateWordCloud(data) {
+            const container = document.getElementById('wordcloud-container');
+            container.innerHTML = '';
+            const words = Object.values(data || {}).map(item => item.word);
+            if (words.length === 0) { container.innerHTML = '<div class="placeholder-text">暂无词语</div>'; return; }
+
+            const freq = {};
+            words.forEach(w => { if(w) freq[w] = (freq[w] || 0) + 1; });
+            const list = Object.entries(freq).map(([text, weight]) => [text, weight * 10]);
+
+            if (list.length > 0) {
+                WordCloud(container, {
+                    list: list, gridSize: 16, weightFactor: 5,
+                    fontFamily: '微软雅黑, sans-serif', color: 'random-light',
+                    backgroundColor: 'transparent', minSize: 15
+                });
+            } else {
+                container.innerHTML = '<div class="placeholder-text">暂无词语</div>';
+            }
+        }
+
+        satisfactionRef.on('value', snap => updateSatisfactionResults(snap.val() || {}));
+        wordcloudRef.on('value', snap => generateWordCloud(snap.val()));
+    </script>
+</body>
+</html>
