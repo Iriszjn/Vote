@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>扫描二维码参与反馈</title>
+    <style>
+        body, html {
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            display: flex; justify-content: center; align-items: center;
+            flex-direction: column; background-color: #f0f0f0;
+            font-family: sans-serif;
+        }
+        #qrcode-container { text-align: center; }
+        #qrcode { border: 10px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+    </style>
+</head>
+<body>
+    <div id="qrcode-container">
+        <h1>请扫描二维码参与活动反馈</h1>
+        <div id="qrcode"></div>
+    </div>
+    <script>
+        window.onload = function() {
+            // ==================================================================
+            // 重要：请将下面的链接替换成你的 index.html 的实际访问链接！
+            // ==================================================================
+            const feedbackPageUrl = "https://<你的GitHub用户名>.github.io/<你的仓库名>/"; // 或者 index.html
+
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(feedbackPageUrl)}`;
+            const qrImg = document.createElement('img');
+            qrImg.src = qrApiUrl;
+            document.getElementById('qrcode').appendChild(qrImg);
+        };
+    </script>
+</body>
+</html>
