@@ -3,86 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>实时反馈大屏</title>
+    <title>MBPTS Tech Journey - 实时反馈</title>
     <style>
+        /* --- Google Font for a cleaner look (optional) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+        /* --- General Layout --- */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-            color: #ecf0f1;
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f6f9; /* Light gray background */
+            color: #333;
             margin: 0;
-            padding: 40px;
+            padding: 20px 40px;
             box-sizing: border-box;
+            overflow: hidden; /* Hide scrollbars */
         }
+
+        /* --- Header --- */
+        .header {
+            text-align: center;
+            padding: 10px 0 25px 0;
+        }
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        /* --- Main Content Layout --- */
         .main-container {
             display: flex;
             gap: 40px;
-            height: calc(100vh - 80px);
+            height: calc(100vh - 140px); /* Adjust based on header height and padding */
         }
-        .results-column, .wordcloud-column {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        .results-column {
-            flex: 1;
-        }
-        .wordcloud-column {
-            flex: 1.5;
+
+        /* --- Card Styling --- */
+        .data-panel {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 25px 35px;
+            box-shadow: 0 6px 25px rgba(40, 50, 70, 0.08);
             display: flex;
             flex-direction: column;
         }
-        h2 {
-            font-size: 2.5em;
-            text-align: center;
-            margin: 0 0 30px 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        .results-panel {
+            flex: 1;
         }
-        #satisfaction-results, #wordcloud-container {
-            width: 100%;
-            height: 100%;
+        .wordcloud-panel {
+            flex: 1.5;
         }
-        .result-bar-container { margin: 25px 0; }
+        
+        /* --- Panel Titles --- */
+        .panel-title {
+            font-size: 2em;
+            font-weight: 500;
+            color: #34495e;
+            margin: 0 0 25px 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        /* --- Satisfaction Results Styling --- */
+        #satisfaction-results {
+            padding-top: 10px;
+        }
+        .result-bar-container {
+            margin-bottom: 30px;
+        }
         .result-label {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 1.5em;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 1.6em;
             font-weight: 500;
+            color: #555;
         }
-        .result-bar { background-color: rgba(0, 0, 0, 0.2); border-radius: 10px; height: 30px; }
+        .result-bar {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            height: 28px;
+            overflow: hidden;
+        }
         .result-bar div {
-            background: linear-gradient(90deg, #1fa2ff, #12d8fa, #a6ffcb);
+            background: linear-gradient(90deg, #4da1ff, #007bff);
             height: 100%;
             border-radius: 10px;
-            transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        /* --- Word Cloud Styling --- */
         #wordcloud-container {
+            flex-grow: 1; /* Make it fill the available space */
+            width: 100%;
             min-height: 400px;
-            flex-grow: 1;
         }
+
+        /* --- Placeholder for empty state --- */
         .placeholder-text {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100%;
             font-size: 1.8em;
-            color: rgba(255, 255, 255, 0.7);
+            color: #bdc3c7;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
 </head>
 <body>
+
+    <header class="header">
+        <h1>MBPTS Tech Journey</h1>
+    </header>
+
     <div class="main-container">
-        <div class="results-column">
-            <h2>满意度统计</h2>
-            <div id="satisfaction-results"><div class="placeholder-text">等待数据...</div></div>
+        <div class="data-panel results-panel">
+            <h2 class="panel-title">满意度统计</h2>
+            <div id="satisfaction-results">
+                <div class="placeholder-text">等待数据...</div>
+            </div>
         </div>
-        <div class="wordcloud-column">
-            <h2>感受词云</h2>
-            <div id="wordcloud-container"><div class="placeholder-text">等待数据...</div></div>
+        <div class="data-panel wordcloud-panel">
+            <h2 class="panel-title">感受词云</h2>
+            <div id="wordcloud-container">
+                <div class="placeholder-text">等待数据...</div>
+            </div>
         </div>
     </div>
 
@@ -90,7 +138,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
         // ==================================================================
-        // 请将您的 Firebase 配置粘贴到此处
+        // 请确保您的 Firebase 配置与之前的文件一致
         // ==================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyCf8mv55m8ZNIZ19mJwBweVd1V-e7DGlAg",
@@ -114,11 +162,14 @@
 
             ['非常好', '不错', '一般', '有待改进'].forEach(option => {
                 const count = data[option] || 0;
-                const percentage = (count / total) * 100;
+                const percentage = total === 0 ? 0 : (count / total) * 100;
                 const el = document.createElement('div');
                 el.className = 'result-bar-container';
                 el.innerHTML = `
-                    <div class="result-label"><span>${option}</span><span>${count}票</span></div>
+                    <div class="result-label">
+                        <span>${option}</span>
+                        <span>${count}票 (${percentage.toFixed(1)}%)</span>
+                    </div>
                     <div class="result-bar"><div style="width: ${percentage}%;"></div></div>`;
                 container.appendChild(el);
             });
@@ -132,16 +183,22 @@
 
             const freq = {};
             words.forEach(w => { if(w) freq[w] = (freq[w] || 0) + 1; });
-            const list = Object.entries(freq).map(([text, weight]) => [text, weight * 10]);
+            const list = Object.entries(freq).map(([text, weight]) => [text, Math.log(weight + 1) * 15]); // Log scale for better visualization
 
             if (list.length > 0) {
                 WordCloud(container, {
-                    list: list, gridSize: 16, weightFactor: 5,
-                    fontFamily: '微软雅黑, sans-serif', color: 'random-light',
-                    backgroundColor: 'transparent', minSize: 15
+                    list: list,
+                    gridSize: 14,
+                    weightFactor: 1.5,
+                    fontFamily: "'Noto Sans SC', sans-serif",
+                    color: 'random-dark',
+                    backgroundColor: 'transparent',
+                    minSize: 18,
+                    shuffle: false,
+                    rotateRatio: 0.3
                 });
             } else {
-                container.innerHTML = '<div class="placeholder-text">暂无词语</div>';
+                container.innerHTML = '<div class="placeholder-text">暂无有效词语</div>';
             }
         }
 
