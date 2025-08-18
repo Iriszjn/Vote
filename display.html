@@ -5,48 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MBPTS Tech Journey - 实时反馈 / Live Feedback</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-        body {
-            font-family: 'Poppins', 'Noto Sans SC', sans-serif;
-            background-color: #f8f9fc;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23eef2f7' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            margin: 0; padding: 30px; box-sizing: border-box; overflow: hidden;
-        }
-        .wrapper { max-width: 1800px; margin: 0 auto; display: flex; flex-direction: column; height: calc(100vh - 60px); }
-        .header h1 {
-            font-size: 3rem; font-weight: 700; color: #3B82F6; margin: 0;
-            letter-spacing: .5px; text-align: center; padding-bottom: 20px; line-height: 1.3;
-        }
-        .main-container { flex-grow: 1; display: flex; gap: 30px; }
-        .data-panel {
-            background-color: #ffffff; border-radius: 20px; padding: 30px 40px;
-            box-shadow: 0 10px 40px -10px rgba(100, 116, 139, 0.12); border: 1px solid #e2e8f0;
-            display: flex; flex-direction: column;
-        }
-        .results-panel { flex: 1; }
-        .wordcloud-panel { flex: 1.5; }
-        .panel-title {
-            font-size: 1.8rem; font-weight: 600; color: #1e293b; margin: 0 0 25px 0;
-            padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; line-height: 1.4;
-        }
-        #satisfaction-results { padding-top: 15px; }
-        .result-bar-container { margin-bottom: 2rem; }
-        .result-label {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
-            font-size: 1.3rem; font-weight: 500; color: #334155;
-        }
-        .result-label .percentage { font-weight: 700; color: #475569; white-space: nowrap; padding-left: 15px;}
-        .result-bar { background-color: #e2e8f0; border-radius: 10px; height: 24px; overflow: hidden; }
-        .result-bar div { height: 100%; border-radius: 10px; transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
-        [data-option="非常好"] .result-bar div { background: linear-gradient(90deg, #2563eb, #3b82f6); }
-        [data-option="不错"] .result-bar div { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
-        [data-option="一般"] .result-bar div { background: linear-gradient(90deg, #64748b, #94a3b8); }
-        [data-option="有待改进"] .result-bar div { background: linear-gradient(90deg, #ef4444, #f87171); }
-        #wordcloud-container { flex-grow: 1; width: 100%; }
-        .placeholder-text {
-            display: flex; justify-content: center; align-items: center; height: 100%;
-            font-size: 1.8rem; font-weight: 500; color: #94a3b8;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap'); body { font-family: 'Poppins', 'Noto Sans SC', sans-serif; background-color: #f8f9fc; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23eef2f7' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); margin: 0; padding: 30px; box-sizing: border-box; overflow: hidden; } .wrapper { max-width: 1800px; margin: 0 auto; display: flex; flex-direction: column; height: calc(100vh - 60px); } .header h1 { font-size: 3rem; font-weight: 700; color: #3B82F6; margin: 0; letter-spacing: .5px; text-align: center; padding-bottom: 20px; line-height: 1.3; } .main-container { flex-grow: 1; display: flex; gap: 30px; } .data-panel { background-color: #ffffff; border-radius: 20px; padding: 30px 40px; box-shadow: 0 10px 40px -10px rgba(100, 116, 139, 0.12); border: 1px solid #e2e8f0; display: flex; flex-direction: column; } .results-panel { flex: 1; } .wordcloud-panel { flex: 1.5; } .panel-title { font-size: 1.8rem; font-weight: 600; color: #1e293b; margin: 0 0 25px 0; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; line-height: 1.4; } #satisfaction-results { padding-top: 15px; } .result-bar-container { margin-bottom: 2rem; } .result-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 1.3rem; font-weight: 500; color: #334155; } .result-label .percentage { font-weight: 700; color: #475569; white-space: nowrap; padding-left: 15px;} .result-bar { background-color: #e2e8f0; border-radius: 10px; height: 24px; overflow: hidden; } .result-bar div { height: 100%; border-radius: 10px; transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1); } [data-option="非常好"] .result-bar div { background: linear-gradient(90deg, #2563eb, #3b82f6); } [data-option="不错"] .result-bar div { background: linear-gradient(90deg, #0ea5e9, #38bdf8); } [data-option="一般"] .result-bar div { background: linear-gradient(90deg, #64748b, #94a3b8); } [data-option="有待改进"] .result-bar div { background: linear-gradient(90deg, #ef4444, #f87171); } #wordcloud-container { flex-grow: 1; width: 100%; } .placeholder-text { display: flex; justify-content: center; align-items: center; height: 100%; font-size: 1.8rem; font-weight: 500; color: #94a3b8; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
 </head>
@@ -58,43 +17,52 @@
         <div class="main-container">
             <div class="data-panel results-panel">
                 <h2 class="panel-title">满意度调查<br><span style="font-size:0.7em; font-weight:500;">Satisfaction Survey</span></h2>
-                <div id="satisfaction-results">
-                    <div class="placeholder-text">等待数据... / Waiting for data...</div>
-                </div>
+                <div id="satisfaction-results"><div class="placeholder-text">加载中... / Loading...</div></div>
             </div>
             <div class="data-panel wordcloud-panel">
                 <h2 class="panel-title">感受词云<br><span style="font-size:0.7em; font-weight:500;">Experience in a Word</span></h2>
-                <div id="wordcloud-container">
-                    <div class="placeholder-text">等待数据... / Waiting for data...</div>
-                </div>
+                <div id="wordcloud-container"><div class="placeholder-text">加载中... / Loading...</div></div>
             </div>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- LeanCloud SDK -->
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage/dist/av-live-query-min.js"></script>
+
     <script>
-        const firebaseConfig = { /* ... PASTE YOUR CONFIG HERE ... */ };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const satisfactionRef = database.ref('satisfaction');
-        const wordcloudRef = database.ref('wordcloudWords');
+        // LeanCloud App Credentials
+        AV.init({
+            appId: "Slv3fGdSSxRZxOzM5la2ZCyD-gzGzoHsz",
+            appKey: "XcUAt5yfUPWQlEpLBdXLcJHW",
+            serverURL: "https://slv3fgds.lc-cn-n1-shared.com"
+        });
 
         const bilingualOptions = {
-            '非常好': '非常好 / Excellent',
-            '不错': '不错 / Good',
-            '一般': '一般 / Average',
-            '有待改进': '有待改进 / Needs Improvement'
+            '非常好': '非常好 / Excellent', '不错': '不错 / Good',
+            '一般': '一般 / Average', '有待改进': '有待改进 / Needs Improvement'
         };
 
-        function updateSatisfactionResults(data) {
+        let satisfactionData = [];
+        let wordCloudData = [];
+
+        // 更新满意度图表
+        function updateSatisfactionResults() {
             const container = document.getElementById('satisfaction-results');
             container.innerHTML = '';
-            const total = Object.values(data).reduce((s, c) => s + c, 0);
+            
+            const counts = { '非常好': 0, '不错': 0, '一般': 0, '有待改进': 0 };
+            satisfactionData.forEach(item => {
+                const vote = item.get('vote');
+                if (counts.hasOwnProperty(vote)) {
+                    counts[vote]++;
+                }
+            });
+
+            const total = satisfactionData.length;
             if (total === 0) { container.innerHTML = '<div class="placeholder-text">暂无投票 / No votes yet</div>'; return; }
 
             Object.keys(bilingualOptions).forEach(optionKey => {
-                const count = data[optionKey] || 0;
+                const count = counts[optionKey];
                 const percentage = total === 0 ? 0 : (count / total) * 100;
                 const el = document.createElement('div');
                 el.className = 'result-bar-container';
@@ -109,10 +77,11 @@
             });
         }
 
-        function generateWordCloud(data) {
+        // 更新词云
+        function generateWordCloud() {
             const container = document.getElementById('wordcloud-container');
             container.innerHTML = '';
-            const words = Object.values(data || {}).map(item => item.word);
+            const words = wordCloudData.map(item => item.get('word'));
             if (words.length === 0) { container.innerHTML = '<div class="placeholder-text">暂无词语 / No words yet</div>'; return; }
 
             const freq = {};
@@ -131,8 +100,39 @@
             }
         }
 
-        satisfactionRef.on('value', snap => updateSatisfactionResults(snap.val() || {}));
-        wordcloudRef.on('value', snap => generateWordCloud(snap.val()));
+        // 页面加载时获取初始数据并设置实时监听
+        async function initialize() {
+            try {
+                // 监听满意度数据
+                const satisfactionQuery = new AV.Query('Satisfaction');
+                const satisfactionLiveQuery = await satisfactionQuery.subscribe();
+                satisfactionQuery.find().then(results => {
+                    satisfactionData = results;
+                    updateSatisfactionResults();
+                });
+                satisfactionLiveQuery.on('create', (obj) => {
+                    satisfactionData.push(obj);
+                    updateSatisfactionResults();
+                });
+
+                // 监听词云数据
+                const wordCloudQuery = new AV.Query('WordCloud');
+                const wordCloudLiveQuery = await wordCloudQuery.subscribe();
+                wordCloudQuery.find().then(results => {
+                    wordCloudData = results;
+                    generateWordCloud();
+                });
+                wordCloudLiveQuery.on('create', (obj) => {
+                    wordCloudData.push(obj);
+                    generateWordCloud();
+                });
+            } catch (error) {
+                console.error("LiveQuery connection failed:", error);
+                alert("实时连接失败，请检查网络或联系管理员。\nLive connection failed, please check your network or contact the administrator.");
+            }
+        }
+
+        initialize();
     </script>
 </body>
 </html>
