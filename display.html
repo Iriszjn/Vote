@@ -51,6 +51,8 @@
             container.innerHTML = '';
             
             const counts = { '非常好': 0, '不错': 0, '一般': 0, '有待改进': 0 };
+            const total = satisfactionData.length;
+            
             satisfactionData.forEach(item => {
                 const vote = item.get('vote');
                 if (counts.hasOwnProperty(vote)) {
@@ -58,7 +60,6 @@
                 }
             });
 
-            const total = satisfactionData.length;
             if (total === 0) { container.innerHTML = '<div class="placeholder-text">暂无投票 / No votes yet</div>'; return; }
 
             Object.keys(bilingualOptions).forEach(optionKey => {
@@ -89,12 +90,27 @@
             const list = Object.entries(freq).map(([text, weight]) => [text, weight * 10]);
 
             if (list.length > 0) {
+                // ==================== 这是被修改的部分 ====================
                 WordCloud(container, {
-                    list: list, gridSize: Math.round(16 * container.offsetWidth / 1024), weightFactor: 2.5,
+                    list: list,
+                    gridSize: 12, // 网格间距，值越小词越密集
+                    weightFactor: 3, // 字体大小的乘数，值越大差异越明显
                     fontFamily: "'Poppins', 'Noto Sans SC', sans-serif",
-                    color: (w, wt) => (wt > 20 ? '#1d4ed8' : wt > 10 ? '#3b82f6' : '#60a5fa'),
-                    backgroundColor: 'transparent', minSize: 18, shuffle: false, rotateRatio: 0.1
+                    
+                    // 定义一个多彩的调色板
+                    color: function () {
+                      const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
+                      return colors[Math.floor(Math.random() * colors.length)];
+                    },
+
+                    backgroundColor: 'transparent',
+                    minSize: 16, // 最小字体大小
+                    shuffle: true, // 随机放置词语
+                    rotateRatio: 0.5, // 50%的词语会旋转
+                    shape: 'circle', // 词云形状为圆形
+                    ellipticity: 0.65 // 圆形的扁平程度
                 });
+                // =======================================================
             } else {
                 container.innerHTML = '<div class="placeholder-text">暂无有效词语 / No valid words</div>';
             }
