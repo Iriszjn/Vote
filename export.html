@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>综合数据导出 / Complete Data Export</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px 40px; background-color: #f8f9fa; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: #0056b3; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        button { font-size: 1.2em; padding: 12px 25px; margin-right: 15px; border-radius: 8px; border: none; cursor: pointer; background-color: #007bff; color: white; transition: background-color 0.2s; }
+        button:hover { background-color: #0056b3; }
+        button:disabled { cursor: not-allowed; background-color: #aaa; }
+        #status { margin-top: 20px; font-size: 1.1em; font-style: italic; color: #555; }
+        .data-section { margin-top: 30px; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+        h2 { margin-top: 0; color: #333; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .raw-data-list { list-style-type: decimal; padding-left: 30px; max-height: 400px; overflow-y: auto; border: 1px solid #eee; padding: 15px 15px 15px 40px; border-radius: 5px; }
+        .raw-data-list li { padding: 5px 0; }
+    </style>
+    <!-- SheetJS (xlsx.js) Library for creating Excel files -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h1>综合数据导出工具 / Complete Data Export Tool</h1>
+        
+        <button id="fetch-btn">获取并生成报告 / Fetch & Generate Report</button>
+        <p id="status">请点击按钮开始。 / Click the button to start.</p>
+
+        <div id="summary-section" class="data-section" style="display: none;">
+            <h2>汇总摘要 / Summary</h2>
+            <table id="summary-table"></table>
+        </div>
+
+        <div id="wordcloud-section" class="data-section" style="display: none;">
+            <h2>词云原始数据 / Word Cloud Raw Data</h2>
+            <ol id="wordcloud-list" class="raw-data-list"></ol>
+        </div>
+
+        <div id="suggestions-section" class="data-section" style="display: none;">
+            <h2>建议原始数据 / Suggestions Raw Data</h2>
+            <ol id="suggestions-list" class="raw-data-list"></ol>
+        </div>
+    </div>
+
+    <!-- LeanCloud SDK -->
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage/dist/av-live-query-min.js"></script>
+
+    <script>
+        // ==================================================================
+        // 请确保这里的 LeanCloud 配置和您其他页面的一致
+        // ==================================================================
+        AV.init({
+            appId: "Slv3fGdSSxRZxOzM5la2ZCyD-gzGzoHsz",
+            appKey: "XcUAt5yfUPWQlEpLBdXLcJHW",
+            serverURL: "https://slv3fgds.lc-cn-n1-shared.com"
+        });
+
+        // 全局变量存储数据
+        let satisfactionData = [], wordCloudData = [], suggestionsData = [];
+
+        // DOM 元素
+        const fetchBtn = document.getElementById('fetch-btn');
+        const statusText = document.getElementById('status');
+        
+        // 主函数：获取所有数据并生成报告
+        async function generateReport() {
+            fetchBtn.disabled = true;
+            statusText.textContent = '正在获取所有数据... / Fetching all data...';
+
+            try {
+                // 并发获取所有数据
+                const [satisfactionResults, wordCloudResults, suggestionResults] = await Promise.all([
+                    new AV.Query('Satisfaction').limit(1000).find(),
+                    new AV.Query('WordCloud').limit(1000).descending('createdAt').find(), // 确保类名正确
+                    new AV.Query('Suggestion').limit(1000).descending('createdAt').find()  // 确保类名正确
+                ]);
+
+                satisfactionData = satisfactionResults;
+                wordCloudData = wordCloudResults;
+                suggestionsData = suggestionResults;
+
+                statusText.textContent = '数据获取成功！正在处理并生成报告... / Data fetched! Processing and generating report...';
+                
+                // 在页面上展示数据
+                displaySummaryAndData();
+
+                // 生成并下载 Excel 文件
+                downloadExcel();
+
+                statusText.textContent = `报告生成完毕！共处理 ${satisfactionData.length} 条投票, ${wordCloudData.length} 个词语, ${suggestionsData.length} 条建议。 / Report complete!`;
+
+            } catch (error) {
+                console.error("处理失败:", error);
+                statusText.textContent = '处理失败，请检查 LeanCloud 类名是否正确，并查看控制台报错信息。 / Failed. Check LeanCloud Class Names and console errors.';
+            } finally {
+                fetchBtn.disabled = false;
+            }
+        }
+
+        // 在页面上展示汇总和原始数据
+        function displaySummaryAndData() {
+            // 1. 处理并展示满意度汇总
+            const summaryContainer = document.getElementById('summary-section');
+            const summaryTable = document.getElementById('summary-table');
+            const counts = { '非常好': 0, '不错': 0, '一般': 0, '有待改进': 0 };
+            satisfactionData.forEach(item => { counts[item.get('vote')]++; });
+            const total = satisfactionData.length;
+
+            summaryTable.innerHTML = `<tr><th>选项 / Option</th><th>票数 / Count</th><th>百分比 / Percentage</th></tr>`;
+            Object.keys(counts).forEach(key => {
+                const percentage = total > 0 ? ((counts[key] / total) * 100).toFixed(1) + '%' : '0%';
+                summaryTable.innerHTML += `<tr><td>${key}</td><td>${counts[key]}</td><td>${percentage}</td></tr>`;
+            });
+            summaryTable.innerHTML += `<tr><td><strong>总计 / Total</strong></td><td><strong>${total}</strong></td><td><strong>100%</strong></td></tr>`;
+            summaryContainer.style.display = 'block';
+
+            // 2. 展示词云原始数据
+            const wordCloudContainer = document.getElementById('wordcloud-section');
+            const wordCloudList = document.getElementById('wordcloud-list');
+            wordCloudList.innerHTML = '';
+            wordCloudData.forEach(item => { wordCloudList.innerHTML += `<li>${item.get('word')}</li>`; });
+            wordCloudContainer.style.display = 'block';
+
+            // 3. 展示建议原始数据
+            const suggestionsContainer = document.getElementById('suggestions-section');
+            const suggestionsList = document.getElementById('suggestions-list');
+            suggestionsList.innerHTML = '';
+            suggestionsData.forEach(item => { suggestionsList.innerHTML += `<li>${item.get('text')}</li>`; });
+            suggestionsContainer.style.display = 'block';
+        }
+
+        // 使用 SheetJS 生成并下载多工作表的 Excel 文件
+        function downloadExcel() {
+            // 1. 准备 Summary Sheet 的数据
+            const summaryCounts = { '非常好': 0, '不错': 0, '一般': 0, '有待改进': 0 };
+            satisfactionData.forEach(item => { summaryCounts[item.get('vote')]++; });
+            const summaryTotal = satisfactionData.length;
+            const summarySheetData = Object.keys(summaryCounts).map(key => ({
+                "Option / 选项": key,
+                "Count / 票数": summaryCounts[key],
+                "Percentage / 百分比": summaryTotal > 0 ? ((summaryCounts[key] / summaryTotal) * 100).toFixed(1) + '%' : '0'
+            }));
+            summarySheetData.push({}); // 添加空行
+            summarySheetData.push({ "Option / 选项": "Total / 总计", "Count / 票数": summaryTotal });
+            
+            // 2. 准备 Word Cloud Raw Data Sheet 的数据
+            const wordCloudSheetData = wordCloudData.map(item => ({
+                "Timestamp / 时间戳": item.createdAt.toLocaleString(),
+                "Word / 词语": item.get('word')
+            }));
+
+            // 3. 准备 Suggestions Raw Data Sheet 的数据
+            const suggestionsSheetData = suggestionsData.map(item => ({
+                "Timestamp / 时间戳": item.createdAt.toLocaleString(),
+                "Suggestion / 建议": item.get('text')
+            }));
+
+            // 创建工作簿和工作表
+            const wb = XLSX.utils.book_new();
+            const wsSummary = XLSX.utils.json_to_sheet(summarySheetData);
+            const wsWords = XLSX.utils.json_to_sheet(wordCloudSheetData);
+            const wsSuggestions = XLSX.utils.json_to_sheet(suggestionsSheetData);
+
+            // 调整列宽 (可选，但能极大提升体验)
+            wsSummary['!cols'] = [{ wch: 30 }, { wch: 15 }, { wch: 20 }];
+            wsWords['!cols'] = [{ wch: 25 }, { wch: 50 }];
+            wsSuggestions['!cols'] = [{ wch: 25 }, { wch: 80 }];
+
+            // 将工作表添加到工作簿
+            XLSX.utils.book_append_sheet(wb, wsSummary, "Summary");
+            XLSX.utils.book_append_sheet(wb, wsWords, "WordCloud Raw Data");
+            XLSX.utils.book_append_sheet(wb, wsSuggestions, "Suggestions Raw Data");
+            
+            // 写入文件并触发下载
+            XLSX.writeFile(wb, "MBPTS_Feedback_Report.xlsx");
+        }
+
+        // 绑定按钮事件
+        fetchBtn.addEventListener('click', generateReport);
+    </script>
+</body>
+</html>
