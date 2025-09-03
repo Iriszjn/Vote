@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>综合数据导出 / Complete Data Export</title>
+    <title>MBPTS Tech Journey - 综合数据导出</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px 40px; background-color: #f8f9fa; color: #333; } 
         .container { max-width: 1200px; margin: 0 auto; } 
@@ -21,7 +21,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>综合数据导出工具 / Complete Data Export Tool</h1>
+        <h1>MBPTS Tech Journey 综合数据导出工具</h1>
         <button id="fetch-btn">获取并生成报告 / Fetch & Generate Report</button>
         <p id="status">请点击按钮开始。 / Click the button to start.</p>
         <!-- Sections will be populated by JS -->
@@ -53,37 +53,29 @@
                 
                 statusText.textContent = '数据获取成功！正在处理并生成报告...';
                 
-                // --- Prepare data for Excel ---
                 const satisfactionSummary = processSatisfaction(satis);
                 const wordCloudRaw = words.map(i => ({ Timestamp: i.createdAt.toLocaleString(), Word: i.get('word') }));
                 const interestRaw = interests.flatMap(i => { const ts = i.createdAt.toLocaleString(); return i.get('selections').map(sel => ({ Timestamp: ts, Selection: sel })); });
                 const trainingRaw = trainings.flatMap(i => { const ts = i.createdAt.toLocaleString(); return i.get('selections').map(sel => ({ Timestamp: ts, Selection: sel })); });
                 const suggestionsRaw = suggs.map(i => ({ Timestamp: i.createdAt.toLocaleString(), Suggestion: i.get('text') }));
 
-                // --- Display summaries on page ---
                 displayOnPage({ satisfactionSummary, interestRaw, trainingRaw });
 
-                // --- Generate and download Excel ---
                 const wb = XLSX.utils.book_new();
-                const ws1 = XLSX.utils.json_to_sheet(satisfactionSummary);
-                const ws2 = XLSX.utils.json_to_sheet(wordCloudRaw);
-                const ws3 = XLSX.utils.json_to_sheet(interestRaw);
-                const ws4 = XLSX.utils.json_to_sheet(trainingRaw);
-                const ws5 = XLSX.utils.json_to_sheet(suggestionsRaw);
-
-                ws1['!cols'] = [{ wch: 20 }, { wch: 10 }, { wch: 15 }];
-                ws2['!cols'] = [{ wch: 25 }, { wch: 50 }];
-                ws3['!cols'] = [{ wch: 25 }, { wch: 50 }];
-                ws4['!cols'] = [{ wch: 25 }, { wch: 50 }];
-                ws5['!cols'] = [{ wch: 25 }, { wch: 80 }];
-
-                XLSX.utils.book_append_sheet(wb, ws1, "Q1 Satisfaction");
-                XLSX.utils.book_append_sheet(wb, ws2, "Q2 WordCloud");
-                XLSX.utils.book_append_sheet(wb, ws3, "Q3 App Interests");
-                XLSX.utils.book_append_sheet(wb, ws4, "Q4 Training Interests");
-                XLSX.utils.book_append_sheet(wb, ws5, "Q5 Suggestions");
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(satisfactionSummary, {header:["Option", "Count", "Percentage"], cellStyles: true}), "Q1 Satisfaction");
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(wordCloudRaw), "Q2 WordCloud");
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(interestRaw), "Q3 App Interests");
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(trainingRaw), "Q4 Training Interests");
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(suggestionsRaw), "Q5 Suggestions");
                 
-                XLSX.writeFile(wb, "TechWeek_Feedback_Report.xlsx");
+                // Set column widths for better readability
+                wb.Sheets["Q1 Satisfaction"]['!cols'] = [{ wch: 20 }, { wch: 10 }, { wch: 15 }];
+                wb.Sheets["Q2 WordCloud"]['!cols'] = [{ wch: 25 }, { wch: 50 }];
+                wb.Sheets["Q3 App Interests"]['!cols'] = [{ wch: 25 }, { wch: 50 }];
+                wb.Sheets["Q4 Training Interests"]['!cols'] = [{ wch: 25 }, { wch: 50 }];
+                wb.Sheets["Q5 Suggestions"]['!cols'] = [{ wch: 25 }, { wch: 80 }];
+                
+                XLSX.writeFile(wb, "MBPTS_Tech_Journey_Feedback_Report.xlsx");
                 
                 statusText.textContent = `报告生成完毕！共处理 ${satis.length} 条投票。`;
 
@@ -102,35 +94,29 @@
             const summaryData = Object.keys(counts).map(key => ({
                 "Option": key, "Count": counts[key], "Percentage": total > 0 ? ((counts[key] / total) * 100).toFixed(1) + '%' : '0%'
             }));
-            summaryData.push({}); // spacer
+            summaryData.push({ "Option": "", "Count": "", "Percentage": "" }); // spacer
             summaryData.push({ "Option": "Total", "Count": total, "Percentage": "100%" });
             return summaryData;
         }
 
         function displayOnPage(data) {
-            // Clear previous results
             document.querySelectorAll('.data-section').forEach(el => el.remove());
 
-            // Generic function to create a display section
             const createSection = (title, headers, rows) => {
                 const section = document.createElement('div');
                 section.className = 'data-section';
                 let tableHTML = `<h2>${title}</h2><table><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
                 tableHTML += rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('');
                 tableHTML += '</table>';
-                section.innerHTML = tableHTML;
                 container.appendChild(section);
             };
 
-            // Display Q1
-            createSection('Q1: 满意度汇总', ['选项', '票数', '百分比'], data.satisfactionSummary.map(r => [r.Option || '', r.Count || '', r.Percentage || '']));
+            createSection('Q1: 满意度汇总', ['选项', '票数', '百分比'], data.satisfactionSummary.map(r => [r.Option, r.Count, r.Percentage]));
             
-            // Display Q3 Summary
             const interestCounts = data.interestRaw.reduce((acc, { Selection }) => { acc[Selection] = (acc[Selection] || 0) + 1; return acc; }, {});
             const sortedInterests = Object.entries(interestCounts).sort((a,b) => b[1] - a[1]);
             createSection('Q3: 热点应用排行', ['应用', '票数'], sortedInterests);
 
-            // Display Q4 Summary
             const trainingCounts = data.trainingRaw.reduce((acc, { Selection }) => { acc[Selection] = (acc[Selection] || 0) + 1; return acc; }, {});
             const sortedTrainings = Object.entries(trainingCounts).sort((a,b) => b[1] - a[1]);
             createSection('Q4: 培训需求排行', ['方向', '票数'], sortedTrainings);
