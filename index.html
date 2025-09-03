@@ -91,7 +91,13 @@
 
             <!-- Question 5 -->
             <div class="form-section">
-                <div class="question-title">5. 任何其他的建议或想法？ <span class="optional-tag">(选填 / Optional)</span><br><span class="lang-en">Any other suggestions or ideas?</span></div>
+                <div class="question-title">5. 这次的Tech Journey对您的工作有什么启发，您有什么新的想法吗？ <span class="optional-tag">(选填 / Optional)</span><br><span class="lang-en">Any new ideas or inspirations for your work?</span></div>
+                <textarea id="inspiration-text" rows="4" placeholder="例如，某个工具可以应用在我的XX项目中，或者某个技术点让我有了新的思考..."></textarea>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="form-section">
+                <div class="question-title">6. 任何其他的建议或想法？ <span class="optional-tag">(选填 / Optional)</span><br><span class="lang-en">Any other suggestions or ideas?</span></div>
                 <textarea id="suggestion-text" rows="4" placeholder="您的建议是我们进步的动力 / Your suggestions help us improve..."></textarea>
             </div>
             
@@ -111,6 +117,7 @@
         const TrainingInterest = AV.Object.extend('TrainingInterest');
         const Satisfaction = AV.Object.extend('Satisfaction');
         const WordCloud = AV.Object.extend('WordCloud');
+        const Inspiration = AV.Object.extend('Inspiration'); // New class for Q5
         const Suggestion = AV.Object.extend('Suggestion');
 
         function getCheckboxValues(name, otherCheckId, otherTextId) {
@@ -137,8 +144,10 @@
                 const wordcloudText = document.getElementById('wordcloud-text').value.trim();
                 const interestValues = getCheckboxValues('q3-options', 'q3-other-check', 'q3-other-text');
                 const trainingValues = getCheckboxValues('q4-options', 'q4-other-check', 'q4-other-text');
+                const inspirationText = document.getElementById('inspiration-text').value.trim(); // Get new Q5 value
                 const suggestionText = document.getElementById('suggestion-text').value.trim();
 
+                // Validation for required fields
                 if (!satisfactionOption) { alert('请完成第1题：选择您的满意度！'); return; }
                 if (!wordcloudText) { alert('请完成第2题：用一个词语描述您的感受！'); return; }
                 if (interestValues.length === 0) { alert('请完成第3题：选择您想尝试的应用！'); return; }
@@ -149,6 +158,10 @@
                 promises.push(new WordCloud().set('word', wordcloudText).save());
                 promises.push(new InterestApplication().set('selections', interestValues).save());
                 promises.push(new TrainingInterest().set('selections', trainingValues).save());
+                
+                if (inspirationText) {
+                    promises.push(new Inspiration().set('text', inspirationText).save());
+                }
                 if (suggestionText) {
                     promises.push(new Suggestion().set('text', suggestionText).save());
                 }
