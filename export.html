@@ -46,9 +46,9 @@
             try {
                 const query = (className) => new AV.Query(className).limit(1000).descending('createdAt').find();
                 
-                const [satis, words, interests, trainings, suggs] = await Promise.all([
+                const [satis, words, interests, trainings, inspirations, suggs] = await Promise.all([
                     query('Satisfaction'), query('WordCloud'), query('InterestApplication'),
-                    query('TrainingInterest'), query('Suggestion')
+                    query('TrainingInterest'), query('Inspiration'), query('Suggestion')
                 ]);
                 
                 statusText.textContent = '数据获取成功！正在处理并生成报告...';
@@ -57,23 +57,26 @@
                 const wordCloudRaw = words.map(i => ({ Timestamp: i.createdAt.toLocaleString(), Word: i.get('word') }));
                 const interestRaw = interests.flatMap(i => { const ts = i.createdAt.toLocaleString(); return i.get('selections').map(sel => ({ Timestamp: ts, Selection: sel })); });
                 const trainingRaw = trainings.flatMap(i => { const ts = i.createdAt.toLocaleString(); return i.get('selections').map(sel => ({ Timestamp: ts, Selection: sel })); });
+                const inspirationsRaw = inspirations.map(i => ({ Timestamp: i.createdAt.toLocaleString(), Inspiration: i.get('text') }));
                 const suggestionsRaw = suggs.map(i => ({ Timestamp: i.createdAt.toLocaleString(), Suggestion: i.get('text') }));
 
                 displayOnPage({ satisfactionSummary, interestRaw, trainingRaw });
 
                 const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(satisfactionSummary, {header:["Option", "Count", "Percentage"], cellStyles: true}), "Q1 Satisfaction");
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(satisfactionSummary, {header:["Option", "Count", "Percentage"]}), "Q1 Satisfaction");
                 XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(wordCloudRaw), "Q2 WordCloud");
                 XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(interestRaw), "Q3 App Interests");
                 XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(trainingRaw), "Q4 Training Interests");
-                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(suggestionsRaw), "Q5 Suggestions");
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(inspirationsRaw), "Q5 Inspirations");
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(suggestionsRaw), "Q6 Suggestions");
                 
-                // Set column widths for better readability
+                // Set column widths
                 wb.Sheets["Q1 Satisfaction"]['!cols'] = [{ wch: 20 }, { wch: 10 }, { wch: 15 }];
                 wb.Sheets["Q2 WordCloud"]['!cols'] = [{ wch: 25 }, { wch: 50 }];
                 wb.Sheets["Q3 App Interests"]['!cols'] = [{ wch: 25 }, { wch: 80 }];
                 wb.Sheets["Q4 Training Interests"]['!cols'] = [{ wch: 25 }, { wch: 80 }];
-                wb.Sheets["Q5 Suggestions"]['!cols'] = [{ wch: 25 }, { wch: 80 }];
+                wb.Sheets["Q5 Inspirations"]['!cols'] = [{ wch: 25 }, { wch: 80 }];
+                wb.Sheets["Q6 Suggestions"]['!cols'] = [{ wch: 25 }, { wch: 80 }];
                 
                 XLSX.writeFile(wb, "MBPTS_Tech_Journey_Feedback_Report.xlsx");
                 
