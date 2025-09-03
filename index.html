@@ -5,79 +5,353 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>活动实时反馈 / Event Live Feedback</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; margin: 0; padding: 20px 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box; } .container { width: 100%; max-width: 500px; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); backdrop-filter: blur(10px); } h1 { font-size: 1.8em; color: #3f51b5; text-align: center; margin: 0 0 25px 0; line-height: 1.3; } .form-section { margin-bottom: 25px; } .question-title { font-size: 1.1em; font-weight: 600; margin-bottom: 15px; color: #555; line-height: 1.4; } .optional-tag { font-size: 0.8em; font-weight: normal; color: #999; } .satisfaction-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; } .satisfaction-options label { cursor: pointer; padding: 12px 5px; border-radius: 10px; background-color: #f1f3f5; border: 1px solid #dee2e6; font-size: 1em; transition: all 0.2s ease-in-out; text-align: center; line-height: 1.3; } .lang-en { display: block; font-size: 0.8em; color: #555; margin-top: 2px; } .satisfaction-options input[type="radio"] { display: none; } .satisfaction-options input[type="radio"]:checked + label { background-color: #4c6ef5; color: white; border-color: #4c6ef5; transform: scale(1.05); box-shadow: 0 4px 12px rgba(76, 110, 245, 0.4); } .satisfaction-options input[type="radio"]:checked + label .lang-en { color: #e0e0e0; } input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1em; margin-top: 5px; box-sizing: border-box; transition: border-color 0.3s, box-shadow 0.3s; } input[type="text"]:focus, textarea:focus { border-color: #4c6ef5; box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.2); outline: none; } button#submit-btn { display: block; width: 100%; padding: 15px; background: linear-gradient(45deg, #4776e6, #8e54e9); color: white; border: none; border-radius: 10px; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-top: 15px; } button#submit-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; margin: 0; padding: 20px 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box; } .container { width: 100%; max-width: 600px; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); backdrop-filter: blur(10px); } h1 { font-size: 1.8em; color: #3f51b5; text-align: center; margin: 0 0 25px 0; line-height: 1.3; } .form-section { margin-bottom: 25px; } .question-title { font-size: 1.1em; font-weight: 600; margin-bottom: 15px; color: #555; line-height: 1.4; } .optional-tag { font-size: 0.8em; font-weight: normal; color: #999; } .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; } .options-grid label, .checkbox-group label { cursor: pointer; padding: 12px 5px; border-radius: 10px; background-color: #f1f3f5; border: 1px solid #dee2e6; font-size: 1em; transition: all 0.2s ease-in-out; text-align: center; line-height: 1.3; display: block; } .lang-en { display: block; font-size: 0.8em; color: #555; margin-top: 2px; } input[type="radio"], input[type="checkbox"] { display: none; } input[type="radio"]:checked + label, input[type="checkbox"]:checked + label { background-color: #4c6ef5; color: white; border-color: #4c6ef5; transform: scale(1.05); box-shadow: 0 4px 12px rgba(76, 110, 245, 0.4); } input[type="radio"]:checked + label .lang-en, input[type="checkbox"]:checked + label .lang-en { color: #e0e0e0; } input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1em; margin-top: 5px; box-sizing: border-box; transition: border-color 0.3s, box-shadow 0.3s; } input[type="text"]:focus, textarea:focus { border-color: #4c6ef5; box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.2); outline: none; } button#submit-btn { display: block; width: 100%; padding: 15px; background: linear-gradient(45deg, #4776e6, #8e54e9); color: white; border: none; border-radius: 10px; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-top: 15px; } button#submit-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); } .checkbox-group { display: flex; flex-direction: column; gap: 10px; } fieldset { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; } legend { font-weight: 500; color: #333; padding: 0 10px; } .other-option { display: flex; align-items: center; gap: 10px; margin-top: 10px; } .other-option label { flex-shrink: 0; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>活动实时反馈<br><span class="lang-en" style="font-size:0.7em; font-weight:normal;">Event Live Feedback</span></h1>
-        
-        <div class="form-section">
-            <div class="question-title">1. 您对本次活动的整体满意度如何？<br><span class="lang-en">How satisfied are you with this event?</span></div>
-            <form id="satisfaction-form" class="satisfaction-options">
-                <input type="radio" id="option1" name="satisfaction" value="非常好"><label for="option1">🎉 非常好<br><span class="lang-en">Excellent</span></label>
-                <input type="radio" id="option2" name="satisfaction" value="不错"><label for="option2">👍 不错<br><span class="lang-en">Good</span></label>
-                <input type="radio" id="option3" name="satisfaction" value="一般"><label for="option3">🙂 一般<br><span class="lang-en">Average</span></label>
-                <input type="radio" id="option4" name="satisfaction" value="有待改进"><label for="option4">🤔 有待改进<br><span class="lang-en">Needs Improvement</span></label>
-            </form>
-        </div>
-        <div class="form-section">
-            <div class="question-title">2. 请用一个词语描述您的感受。<br><span class="lang-en">Describe your feeling in one word.</span></div>
-            <input type="text" id="wordcloud-text" placeholder="例如：有趣、充实 / e.g., Fun, Inspiring...">
-        </div>
-        <div class="form-section">
-            <div class="question-title">3. 您对活动有什么建议？ <span class="optional-tag">(选填 / Optional)</span><br><span class="lang-en">Any suggestions for us?</span></div>
-            <textarea id="suggestion-text" rows="4" placeholder="您的建议是我们进步的动力 / Your suggestions help us improve..."></textarea>
-        </div>
-        <button id="submit-btn" onclick="submitFeedback()">提 交 / SUBMIT</button>
+        <form id="feedback-form">
+            <h1>活动实时反馈<br><span class="lang-en" style="font-size:0.7em; font-weight:normal;">Event Live Feedback</span></h1>
+            
+            <!-- Question 1 -->
+            <div class="form-section">
+                <div class="question-title">1. 您对本次科技周的整体感受如何？<br><span class="lang-en">How do you feel about this Tech Week overall?</span></div>
+                <div class="options-grid">
+                    <input type="radio" id="q1-opt1" name="satisfaction" value="非常棒"><label for="q1-opt1">🎉 非常棒<br><span class="lang-en">Excellent</span></label>
+                    <input type="radio" id="q1-opt2" name="satisfaction" value="还不错"><label for="q1-opt2">👍 还不错<br><span class="lang-en">Good</span></label>
+                    <input type="radio" id="q1-opt3" name="satisfaction" value="一般般"><label for="q1-opt3">🙂 一般般<br><span class="lang-en">Average</span></label>
+                    <input type="radio" id="q1-opt4" name="satisfaction" value="有待改进"><label for="q1-opt4">🤔 有待改进<br><span class="lang-en">Needs Improvement</span></label>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="form-section">
+                <div class="question-title">2. 如果用一个词来形容本次科技周，它会是？<br><span class="lang-en">If you could use one word to describe it, what would it be?</span></div>
+                <input type="text" id="wordcloud-text" placeholder="例如：前沿、启发、有趣... / e.g., Inspiring, Fun...">
+            </div>
+
+            <!-- Question 3 -->
+            <div class="form-section">
+                <div class="question-title">3. 听完分享，您最想立即在工作或生活中尝试哪些应用？ (可多选)<br><span class="lang-en">What applications are you most eager to try? (Multiple selections)</span></div>
+                <div class="checkbox-group">
+                    <fieldset>
+                        <legend>专业开发提效 / Professional Dev Tools</legend>
+                        <input type="checkbox" id="q3-opt1" name="q3-options" value="Dify"><label for="q3-opt1">Dify <span class="lang-en">LLM App Dev Platform</span></label>
+                        <input type="checkbox" id="q3-opt2" name="q3-options" value="M365 Copilot"><label for="q3-opt2">M365 Copilot <span class="lang-en">AI Work Assistant</span></label>
+                        <input type="checkbox" id="q3-opt3" name="q3-options" value="Cursor"><label for="q3-opt3">Cursor <span class="lang-en">AI-First Code Editor</span></label>
+                    </fieldset>
+                    <fieldset>
+                        <legend>创意与生活应用 / Creative & Lifestyle Apps</legend>
+                        <input type="checkbox" id="q3-opt4" name="q3-options" value="AI 音乐生成 (Suno)"><label for="q3-opt4">AI 音乐生成 (Suno)<span class="lang-en">AI Music Generation</span></label>
+                        <input type="checkbox" id="q3-opt5" name="q3-options" value="AI 图像生成 (Midjourney)"><label for="q3-opt5">AI 图像生成 (Midjourney)<span class="lang-en">AI Image Generation</span></label>
+                        <input type="checkbox" id="q3-opt6" name="q3-options" value="AI 视频生成 (Pika)"><label for="q3-opt6">AI 视频生成 (Pika)<span class="lang-en">AI Video Generation</span></label>
+                    </fieldset>
+                    <div class="other-option">
+                        <input type="checkbox" id="q3-other-check" name="q3-options" value="其他"><label for="q3-other-check">其他<span class="lang-en">Other</span></label>
+                        <input type="text" id="q3-other-text" placeholder="请补充 / Please specify...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="form-section">
+                <div class="question-title">4. 对于未来的AI培训，您最感兴趣的方向是？ (可多选)<br><span class="lang-en">For future AI training, which topics interest you most? (Multiple selections)</span></div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="q4-opt1" name="q4-options" value="AI 工具提效 (ChatGPT/Gemini)"><label for="q4-opt1">AI 工具提效 (ChatGPT/Gemini)<span class="lang-en">AI Tool Proficiency</span></label>
+                    <input type="checkbox" id="q4-opt2" name="q4-options" value="AI Agent 技术 (AutoGen/CrewAI)"><label for="q4-opt2">AI Agent 技术 (AutoGen/CrewAI)<span class="lang-en">AI Agent Tech</span></label>
+                    <input type="checkbox" id="q4-opt3" name="q4-options" value="AI 行业案例与趋势"><label for="q4-opt3">AI 行业案例与趋势<span class="lang-en">Industry Cases & Trends</span></label>
+                    <input type="checkbox" id="q4-opt4" name="q4-options" value="AI 赋能业务增长"><label for="q4-opt4">AI 赋能业务增长<span class="lang-en">AI for Business Growth</span></label>
+                    <input type="checkbox" id="q4-opt5" name="q4-options" value="AI 技术原理入门"><label for="q4-opt5">AI 技术原理入门<span class="lang-en">AI Fundamental Principles</span></label>
+                    <div class="other-option">
+                        <input type="checkbox" id="q4-other-check" name="q4-options" value="其他"><label for="q4-other-check">其他<span class="lang-en">Other</span></label>
+                        <input type="text" id="q4-other-text" placeholder="请补充 / Please specify...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="form-section">
+                <div class="question-title">5. 任何其他的建议或想法？ <span class="optional-tag">(选填 / Optional)</span><br><span class="lang-en">Any other suggestions or ideas?</span></div>
+                <textarea id="suggestion-text" rows="4" placeholder="您的建议是我们进步的动力 / Your suggestions help us improve..."></textarea>
+            </div>
+            
+            <button id="submit-btn" type="button" onclick="submitFeedback()">提 交 / SUBMIT</button>
+        </form>
     </div>
 
-    <!-- LeanCloud SDK -->
     <script src="//cdn.jsdelivr.net/npm/leancloud-storage/dist/av-live-query-min.js"></script>
-
     <script>
-        // LeanCloud App Credentials
         AV.init({
             appId: "Slv3fGdSSxRZxOzM5la2ZCyD-gzGzoHsz",
             appKey: "XcUAt5yfUPWQlEpLBdXLcJHW",
             serverURL: "https://slv3fgds.lc-cn-n1-shared.com"
         });
 
-        function submitFeedback() {
-            const satisfactionOption = document.querySelector('input[name="satisfaction"]:checked');
-            const wordcloudText = document.getElementById('wordcloud-text').value.trim();
-            const suggestionText = document.getElementById('suggestion-text').value.trim();
+        // 定义新的LeanCloud数据表
+        const InterestApplication = AV.Object.extend('InterestApplication');
+        const TrainingInterest = AV.Object.extend('TrainingInterest');
+        const Satisfaction = AV.Object.extend('Satisfaction');
+        const WordCloud = AV.Object.extend('WordCloud');
+        const Suggestion = AV.Object.extend('Suggestion');
 
-            if (!satisfactionOption) { alert('请选择您的满意度！\nPlease select your satisfaction level!'); return; }
-            if (!wordcloudText) { alert('请用一个词语描述您的感受！\nPlease describe your feeling in one word!'); return; }
-            
-            // 1. 保存满意度投票
-            const Satisfaction = AV.Object.extend('Satisfaction');
-            const satisfaction = new Satisfaction();
-            satisfaction.set('vote', satisfactionOption.value);
-            satisfaction.save();
-
-            // 2. 保存词云词语
-            const WordCloud = AV.Object.extend('WordCloud');
-            const wordCloud = new WordCloud();
-            wordCloud.set('word', wordcloudText);
-            wordCloud.save();
-
-            // 3. 保存建议（如果存在）
-            if (suggestionText) {
-                const Suggestion = AV.Object.extend('Suggestion');
-                const suggestion = new Suggestion();
-                suggestion.set('text', suggestionText);
-                suggestion.save();
-            }
-
-            // 清空表单
-            document.getElementById('satisfaction-form').reset();
-            document.getElementById('wordcloud-text').value = '';
-            document.getElementById('suggestion-text').value = '';
-            
-            alert('感谢您的参与！反馈已成功提交。\nThank you! Your feedback has been submitted successfully.');
+        function getCheckboxValues(name, otherCheckId, otherTextId) {
+            const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+            const values = [];
+            checked.forEach(checkbox => {
+                if (checkbox.id === otherCheckId) {
+                    const otherText = document.getElementById(otherTextId).value.trim();
+                    if (otherText) values.push(`其他: ${otherText}`);
+                } else {
+                    values.push(checkbox.value);
+                }
+            });
+            return values;
         }
+
+        async function submitFeedback() {
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '提交中... / Submitting...';
+
+            try {
+                // 获取所有表单值
+                const satisfactionOption = document.querySelector('input[name="satisfaction"]:checked');
+                const wordcloudText = document.getElementById('wordcloud-text').value.trim();
+                const interestValues = getCheckboxValues('q3-options', 'q3-other-check', 'q3-other-text');
+                const trainingValues = getCheckboxValues('q4-options', 'q4-other-check', 'q4-other-text');
+                const suggestionText = document.getElementById('suggestion-text').value.trim();
+
+                // 验证
+                if (!satisfactionOption) { alert('请完成第1题：选择您的满意度！\nPlease complete Q1: Select your satisfaction level!'); return; }
+                if (!wordcloudText) { alert('请完成第2题：用一个词语描述您的感受！\nPlease complete Q2: Describe your feeling in one word!'); return; }
+                if (interestValues.length === 0) { alert('请完成第3题：选择您想尝试的应用！\nPlease complete Q3: Select applications you want to try!'); return; }
+                if (trainingValues.length === 0) { alert('请完成第4题：选择您感兴趣的培训方向！\nPlease complete Q4: Select training interests!'); return; }
+
+                const promises = [];
+
+                // 1. 保存满意度
+                const satisfaction = new Satisfaction();
+                satisfaction.set('vote', satisfactionOption.value);
+                promises.push(satisfaction.save());
+
+                // 2. 保存词云
+                const wordCloud = new WordCloud();
+                wordCloud.set('word', wordcloudText);
+                promises.push(wordCloud.save());
+                
+                // 3. 保存想尝试的应用 (数组)
+                const interestApplication = new InterestApplication();
+                interestApplication.set('selections', interestValues);
+                promises.push(interestApplication.save());
+
+                // 4. 保存培训兴趣 (数组)
+                const trainingInterest = new TrainingInterest();
+                trainingInterest.set('selections', trainingValues);
+                promises.push(trainingInterest.save());
+
+                // 5. 保存建议
+                if (suggestionText) {
+                    const suggestion = new Suggestion();
+                    suggestion.set('text', suggestionText);
+                    promises.push(suggestion.save());
+                }
+                
+                // 并发保存所有数据
+                await Promise.all(promises);
+
+                document.getElementById('feedback-form').reset();
+                alert('感谢您的参与！反馈已成功提交。\nThank you! Your feedback has been submitted successfully.');
+
+            } catch (error) {
+                console.error("提交失败 / Submission failed:", error);
+                alert('提交失败，请稍后重试。\nSubmission failed, please try again later.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '提 交 / SUBMIT';
+            }
+        }
+    </script>
+</body>
+</html>```
+
+---
+
+### **第二步：替换实时展示页面 `display (1).html`**
+
+这个文件是改动最大的。它使用了全新的布局和新增的条形图来展示所有四个核心问题的数据。
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBPTS Tech Journey - 实时反馈 / Live Feedback</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap'); 
+        body { font-family: 'Poppins', 'Noto Sans SC', sans-serif; background-color: #f8f9fc; margin: 0; padding: 30px; box-sizing: border-box; } 
+        .wrapper { max-width: 1800px; margin: 0 auto; } 
+        .header h1 { font-size: 3rem; font-weight: 700; color: #3B82F6; margin: 0 0 30px 0; text-align: center; line-height: 1.3; } 
+        .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); gap: 30px; } 
+        .data-panel { background-color: #ffffff; border-radius: 20px; padding: 30px 40px; box-shadow: 0 10px 40px -10px rgba(100, 116, 139, 0.12); border: 1px solid #e2e8f0; display: flex; flex-direction: column; min-height: 45vh; } 
+        .panel-title { font-size: 1.8rem; font-weight: 600; color: #1e293b; margin: 0 0 25px 0; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; line-height: 1.4; } 
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .placeholder-text { text-align: center; font-size: 1.8rem; font-weight: 500; color: #94a3b8; }
+        /* Satisfaction Bar Styles */
+        .result-bar-container { margin-bottom: 1.8rem; }
+        .result-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 1.2rem; font-weight: 500; color: #334155; }
+        .result-label .percentage { font-weight: 700; color: #475569; }
+        .result-bar { background-color: #e2e8f0; border-radius: 10px; height: 22px; overflow: hidden; }
+        .result-bar div { height: 100%; border-radius: 10px; transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        [data-option="非常棒"] .result-bar div { background: linear-gradient(90deg, #2563eb, #3b82f6); }
+        [data-option="还不错"] .result-bar div { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
+        [data-option="一般般"] .result-bar div { background: linear-gradient(90deg, #64748b, #94a3b8); }
+        [data-option="有待改进"] .result-bar div { background: linear-gradient(90deg, #ef4444, #f87171); }
+        /* Word Cloud Styles */
+        #wordcloud-container { width: 100%; height: 100%; }
+        /* Horizontal Bar Chart Styles (for Q3 & Q4) */
+        .bar-chart-container { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
+        .bar-item { display: flex; align-items: center; gap: 15px; }
+        .bar-label { flex: 0 0 35%; font-size: 1rem; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bar-wrapper { flex-grow: 1; background-color: #e2e8f0; border-radius: 8px; }
+        .bar-itself { height: 28px; border-radius: 8px; background: linear-gradient(90deg, #10b981, #34d399); transition: width 0.5s ease-out; }
+        .bar-count { font-size: 1rem; font-weight: 700; color: #1e293b; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <h1>MBPTS Tech Journey<br><span style="font-size:0.7em; font-weight:500;">实时反馈 / Live Feedback</span></h1>
+        </header>
+        <div class="main-grid">
+            <!-- Q1: Satisfaction -->
+            <div class="data-panel">
+                <h2 class="panel-title">1. 整体满意度<br><span style="font-size:0.7em; font-weight:500;">Overall Satisfaction</span></h2>
+                <div id="satisfaction-results" class="content-area">
+                    <div class="placeholder-text">加载中...</div>
+                </div>
+            </div>
+            <!-- Q2: Word Cloud -->
+            <div class="data-panel">
+                <h2 class="panel-title">2. 感受词云<br><span style="font-size:0.7em; font-weight:500;">Experience in a Word</span></h2>
+                <div id="wordcloud-container" class="content-area">
+                    <div class="placeholder-text">加载中...</div>
+                </div>
+            </div>
+            <!-- Q3: Eager to Apply -->
+            <div class="data-panel">
+                <h2 class="panel-title">3. 热点应用排行<br><span style="font-size:0.7em; font-weight:500;">Top Eager-to-Apply Tools</span></h2>
+                <div id="interest-results" class="content-area">
+                    <div class="placeholder-text">加载中...</div>
+                </div>
+            </div>
+            <!-- Q4: Training Interests -->
+            <div class="data-panel">
+                <h2 class="panel-title">4. 培训需求洞察<br><span style="font-size:0.7em; font-weight:500;">AI Training Interests</span></h2>
+                <div id="training-results" class="content-area">
+                    <div class="placeholder-text">加载中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage/dist/av-live-query-min.js"></script>
+    <script>
+        AV.init({
+            appId: "Slv3fGdSSxRZxOzM5la2ZCyD-gzGzoHsz",
+            appKey: "XcUAt5yfUPWQlEpLBdXLcJHW",
+            serverURL: "https://slv3fgds.lc-cn-n1-shared.com"
+        });
+
+        // Global data stores
+        let satisfactionData = [], wordCloudData = [], interestData = [], trainingData = [];
+
+        // --- Q1: Satisfaction Chart ---
+        function updateSatisfactionResults() {
+            const container = document.getElementById('satisfaction-results');
+            const counts = { '非常棒': 0, '还不错': 0, '一般般': 0, '有待改进': 0 };
+            satisfactionData.forEach(item => { counts[item.get('vote')]++; });
+            const total = satisfactionData.length;
+
+            if (total === 0) { container.innerHTML = '<div class="placeholder-text">暂无投票</div>'; return; }
+            container.innerHTML = ''; // Clear existing content
+            Object.keys(counts).forEach(key => {
+                const count = counts[key];
+                const percentage = total > 0 ? (count / total) * 100 : 0;
+                const el = document.createElement('div');
+                el.className = 'result-bar-container';
+                el.setAttribute('data-option', key);
+                el.innerHTML = `<div class="result-label"><span>${key}</span><span class="percentage">${count} 票 (${percentage.toFixed(1)}%)</span></div><div class="result-bar"><div style="width: ${percentage}%;"></div></div>`;
+                container.appendChild(el);
+            });
+        }
+
+        // --- Q2: Word Cloud ---
+        function generateWordCloud() {
+            const container = document.getElementById('wordcloud-container');
+            const words = wordCloudData.map(item => item.get('word')).filter(Boolean);
+            if (words.length === 0) { container.innerHTML = '<div class="placeholder-text">暂无词语</div>'; return; }
+            const freq = words.reduce((acc, word) => { acc[word] = (acc[word] || 0) + 1; return acc; }, {});
+            const list = Object.entries(freq).map(([text, weight]) => [text, weight * 10]);
+            
+            container.innerHTML = ''; // Clear for redraw
+            WordCloud(container, { list, gridSize: 12, weightFactor: 3, fontFamily: "'Poppins', 'Noto Sans SC', sans-serif", color: 'random-dark', backgroundColor: 'transparent', minSize: 16, shuffle: true, rotateRatio: 0.5, shape: 'circle', ellipticity: 0.65 });
+        }
+
+        // --- Q3 & Q4: Reusable Bar Chart Function ---
+        function updateBarChart(containerId, data, title) {
+            const container = document.getElementById(containerId);
+            const allSelections = data.flatMap(item => item.get('selections'));
+            if (allSelections.length === 0) { container.innerHTML = `<div class="placeholder-text">暂无${title}</div>`; return; }
+            
+            const counts = allSelections.reduce((acc, sel) => { acc[sel] = (acc[sel] || 0) + 1; return acc; }, {});
+            const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+            const maxCount = sorted.length > 0 ? sorted[0][1] : 0;
+            
+            container.innerHTML = '<div class="bar-chart-container"></div>';
+            const chartContainer = container.querySelector('.bar-chart-container');
+            
+            sorted.forEach(([label, count]) => {
+                const width = maxCount > 0 ? (count / maxCount) * 100 : 0;
+                const item = document.createElement('div');
+                item.className = 'bar-item';
+                item.innerHTML = `<div class="bar-label" title="${label}">${label}</div><div class="bar-wrapper"><div class="bar-itself" style="width: ${width}%;"></div></div><div class="bar-count">${count}</div>`;
+                chartContainer.appendChild(item);
+            });
+        }
+
+        // --- Main Initialization ---
+        async function initialize() {
+            try {
+                // Initial fetch and live query for all data types
+                const setupLiveQuery = async (className, dataStore, renderFunc, chartTitle = '') => {
+                    const query = new AV.Query(className);
+                    const results = await query.limit(1000).find();
+                    dataStore.push(...results);
+                    renderFunc(dataStore, chartTitle);
+
+                    const liveQuery = await query.subscribe();
+                    liveQuery.on('create', (obj) => {
+                        dataStore.push(obj);
+                        renderFunc(dataStore, chartTitle);
+                    });
+                };
+                
+                await Promise.all([
+                    setupLiveQuery('Satisfaction', satisfactionData, () => updateSatisfactionResults()),
+                    setupLiveQuery('WordCloud', wordCloudData, () => generateWordCloud()),
+                    setupLiveQuery('InterestApplication', interestData, (d, t) => updateBarChart('interest-results', d, t), '数据'),
+                    setupLiveQuery('TrainingInterest', trainingData, (d, t) => updateBarChart('training-results', d, t), '数据')
+                ]);
+
+            } catch (error) {
+                console.error("LiveQuery connection failed:", error);
+                alert("实时连接失败，请检查网络或联系管理员。");
+            }
+        }
+
+        initialize();
     </script>
 </body>
 </html>
