@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>活动实时反馈 / Event Live Feedback</title>
+    <title>MBPTS Tech Journey 实时反馈 / Event Live Feedback</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; margin: 0; padding: 20px 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box; }
         .container { width: 100%; max-width: 600px; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); backdrop-filter: blur(10px); }
@@ -12,7 +12,7 @@
         .question-title { font-size: 1.1em; font-weight: 600; margin-bottom: 15px; color: #555; line-height: 1.4; }
         .optional-tag { font-size: 0.8em; font-weight: normal; color: #999; }
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .options-grid label, .checkbox-group label { cursor: pointer; padding: 12px 5px; border-radius: 10px; background-color: #f1f3f5; border: 1px solid #dee2e6; font-size: 1em; transition: all 0.2s ease-in-out; text-align: center; line-height: 1.3; display: block; }
+        .options-grid label, .checkbox-group label { cursor: pointer; padding: 12px 5px; border-radius: 10px; background-color: #f1f3f5; border: 1px solid #dee2e6; font-size: 1em; transition: all 0.2s ease-in-out; text-align: center; line-height: 1.3; display: flex; flex-direction: column; justify-content: center; min-height: 50px; }
         .lang-en { display: block; font-size: 0.8em; color: #555; margin-top: 2px; }
         input[type="radio"], input[type="checkbox"] { display: none; }
         input[type="radio"]:checked + label, input[type="checkbox"]:checked + label { background-color: #4c6ef5; color: white; border-color: #4c6ef5; transform: scale(1.05); box-shadow: 0 4px 12px rgba(76, 110, 245, 0.4); }
@@ -22,6 +22,7 @@
         button#submit-btn { display: block; width: 100%; padding: 15px; background: linear-gradient(45deg, #4776e6, #8e54e9); color: white; border: none; border-radius: 10px; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-top: 15px; }
         button#submit-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); }
         .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
+        .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } /* For Q3 layout */
         fieldset { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
         legend { font-weight: 500; color: #333; padding: 0 10px; }
         .other-option { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
@@ -31,7 +32,7 @@
 <body>
     <div class="container">
         <form id="feedback-form">
-            <h1>活动实时反馈<br><span class="lang-en" style="font-size:0.7em; font-weight:normal;">Event Live Feedback</span></h1>
+            <h1>MBPTS Tech Journey 实时反馈<br><span class="lang-en" style="font-size:0.7em; font-weight:normal;">Event Live Feedback</span></h1>
             
             <!-- Question 1 -->
             <div class="form-section">
@@ -53,23 +54,25 @@
             <!-- Question 3 -->
             <div class="form-section">
                 <div class="question-title">3. 听完分享，您最想立即在工作或生活中尝试哪些应用？ (可多选)<br><span class="lang-en">What applications are you most eager to try? (Multiple selections)</span></div>
-                <div class="checkbox-group">
-                    <fieldset>
-                        <legend>专业开发提效 / Professional Dev Tools</legend>
-                        <input type="checkbox" id="q3-opt1" name="q3-options" value="Dify"><label for="q3-opt1">Dify <span class="lang-en">LLM App Dev Platform</span></label>
-                        <input type="checkbox" id="q3-opt2" name="q3-options" value="M365 Copilot"><label for="q3-opt2">M365 Copilot <span class="lang-en">AI Work Assistant</span></label>
-                        <input type="checkbox" id="q3-opt3" name="q3-options" value="Cursor"><label for="q3-opt3">Cursor <span class="lang-en">AI-First Code Editor</span></label>
-                    </fieldset>
-                    <fieldset>
-                        <legend>创意与生活应用 / Creative & Lifestyle Apps</legend>
-                        <input type="checkbox" id="q3-opt4" name="q3-options" value="AI 音乐生成 (Suno)"><label for="q3-opt4">AI 音乐生成 (Suno)<span class="lang-en">AI Music Generation</span></label>
-                        <input type="checkbox" id="q3-opt5" name="q3-options" value="AI 图像生成 (Midjourney)"><label for="q3-opt5">AI 图像生成 (Midjourney)<span class="lang-en">AI Image Generation</span></label>
-                        <input type="checkbox" id="q3-opt6" name="q3-options" value="AI 视频生成 (Pika)"><label for="q3-opt6">AI 视频生成 (Pika)<span class="lang-en">AI Video Generation</span></label>
-                    </fieldset>
-                    <div class="other-option">
-                        <input type="checkbox" id="q3-other-check" name="q3-options" value="其他"><label for="q3-other-check">其他<span class="lang-en">Other</span></label>
-                        <input type="text" id="q3-other-text" placeholder="请补充 / Please specify...">
+                <fieldset>
+                    <legend>专业开发提效 / Professional Dev Tools</legend>
+                    <div class="checkbox-grid">
+                        <input type="checkbox" id="q3-opt1" name="q3-options" value="应用开发 (Dify, Coze...)"><label for="q3-opt1">应用开发 (Dify, Coze...)<span class="lang-en">App Dev Platforms</span></label>
+                        <input type="checkbox" id="q3-opt2" name="q3-options" value="办公助理 (M365 Copilot...)"><label for="q3-opt2">办公助理 (M365 Copilot...)<span class="lang-en">Work Assistants</span></label>
+                        <input type="checkbox" id="q3-opt3" name="q3-options" value="代码辅助 (Cursor, Codeium...)"><label for="q3-opt3">代码辅助 (Cursor, Codeium...)<span class="lang-en">Coding Assistants</span></label>
                     </div>
+                </fieldset>
+                <fieldset>
+                    <legend>创意与生活应用 / Creative & Lifestyle Apps</legend>
+                    <div class="checkbox-grid">
+                        <input type="checkbox" id="q3-opt4" name="q3-options" value="AI 音乐 (Suno, Udio...)"><label for="q3-opt4">AI 音乐 (Suno, Udio...)<span class="lang-en">AI Music</span></label>
+                        <input type="checkbox" id="q3-opt5" name="q3-options" value="AI 图像 (Midjourney, DALL-E...)"><label for="q3-opt5">AI 图像 (Midjourney, DALL-E...)<span class="lang-en">AI Images</span></label>
+                        <input type="checkbox" id="q3-opt6" name="q3-options" value="AI 视频 (Pika, Kling...)"><label for="q3-opt6">AI 视频 (Pika, Kling...)<span class="lang-en">AI Videos</span></label>
+                    </div>
+                </fieldset>
+                <div class="other-option">
+                    <input type="checkbox" id="q3-other-check" name="q3-options" value="其他"><label for="q3-other-check">其他<span class="lang-en">Other</span></label>
+                    <input type="text" id="q3-other-text" placeholder="请补充 / Please specify...">
                 </div>
             </div>
 
@@ -77,8 +80,8 @@
             <div class="form-section">
                 <div class="question-title">4. 对于未来的AI培训，您最感兴趣的方向是？ (可多选)<br><span class="lang-en">For future AI training, which topics interest you most? (Multiple selections)</span></div>
                 <div class="checkbox-group">
-                    <input type="checkbox" id="q4-opt1" name="q4-options" value="AI 工具提效 (ChatGPT/Gemini)"><label for="q4-opt1">AI 工具提效 (ChatGPT/Gemini)<span class="lang-en">AI Tool Proficiency</span></label>
-                    <input type="checkbox" id="q4-opt2" name="q4-options" value="AI Agent 技术 (AutoGen/CrewAI)"><label for="q4-opt2">AI Agent 技术 (AutoGen/CrewAI)<span class="lang-en">AI Agent Tech</span></label>
+                    <input type="checkbox" id="q4-opt1" name="q4-options" value="AI 工具提效 (ChatGPT, Kimi...)"><label for="q4-opt1">AI 工具提效 (ChatGPT, Kimi...)<span class="lang-en">AI Tool Proficiency</span></label>
+                    <input type="checkbox" id="q4-opt2" name="q4-options" value="AI Agent 技术 (AutoGen, CrewAI...)"><label for="q4-opt2">AI Agent 技术 (AutoGen, CrewAI...)<span class="lang-en">AI Agent Tech</span></label>
                     <input type="checkbox" id="q4-opt3" name="q4-options" value="AI 行业案例与趋势"><label for="q4-opt3">AI 行业案例与趋势<span class="lang-en">Industry Cases & Trends</span></label>
                     <input type="checkbox" id="q4-opt4" name="q4-options" value="AI 赋能业务增长"><label for="q4-opt4">AI 赋能业务增长<span class="lang-en">AI for Business Growth</span></label>
                     <input type="checkbox" id="q4-opt5" name="q4-options" value="AI 技术原理入门"><label for="q4-opt5">AI 技术原理入门<span class="lang-en">AI Fundamental Principles</span></label>
@@ -107,7 +110,6 @@
             serverURL: "https://slv3fgds.lc-cn-n1-shared.com"
         });
 
-        // 定义新的LeanCloud数据表
         const InterestApplication = AV.Object.extend('InterestApplication');
         const TrainingInterest = AV.Object.extend('TrainingInterest');
         const Satisfaction = AV.Object.extend('Satisfaction');
@@ -116,15 +118,15 @@
 
         function getCheckboxValues(name, otherCheckId, otherTextId) {
             const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
-            const values = [];
-            checked.forEach(checkbox => {
+            let values = [];
+            for (const checkbox of checked) {
                 if (checkbox.id === otherCheckId) {
                     const otherText = document.getElementById(otherTextId).value.trim();
                     if (otherText) values.push(`其他: ${otherText}`);
                 } else {
                     values.push(checkbox.value);
                 }
-            });
+            }
             return values;
         }
 
@@ -134,57 +136,33 @@
             submitBtn.textContent = '提交中... / Submitting...';
 
             try {
-                // 获取所有表单值
                 const satisfactionOption = document.querySelector('input[name="satisfaction"]:checked');
                 const wordcloudText = document.getElementById('wordcloud-text').value.trim();
                 const interestValues = getCheckboxValues('q3-options', 'q3-other-check', 'q3-other-text');
                 const trainingValues = getCheckboxValues('q4-options', 'q4-other-check', 'q4-other-text');
                 const suggestionText = document.getElementById('suggestion-text').value.trim();
 
-                // 验证
-                if (!satisfactionOption) { alert('请完成第1题：选择您的满意度！\nPlease complete Q1: Select your satisfaction level!'); return; }
-                if (!wordcloudText) { alert('请完成第2题：用一个词语描述您的感受！\nPlease complete Q2: Describe your feeling in one word!'); return; }
-                if (interestValues.length === 0) { alert('请完成第3题：选择您想尝试的应用！\nPlease complete Q3: Select applications you want to try!'); return; }
-                if (trainingValues.length === 0) { alert('请完成第4题：选择您感兴趣的培训方向！\nPlease complete Q4: Select training interests!'); return; }
+                if (!satisfactionOption) { alert('请完成第1题：选择您的满意度！'); return; }
+                if (!wordcloudText) { alert('请完成第2题：用一个词语描述您的感受！'); return; }
+                if (interestValues.length === 0) { alert('请完成第3题：选择您想尝试的应用！'); return; }
+                if (trainingValues.length === 0) { alert('请完成第4题：选择您感兴趣的培训方向！'); return; }
 
                 const promises = [];
-
-                // 1. 保存满意度
-                const satisfaction = new Satisfaction();
-                satisfaction.set('vote', satisfactionOption.value);
-                promises.push(satisfaction.save());
-
-                // 2. 保存词云
-                const wordCloud = new WordCloud();
-                wordCloud.set('word', wordcloudText);
-                promises.push(wordCloud.save());
-                
-                // 3. 保存想尝试的应用 (数组)
-                const interestApplication = new InterestApplication();
-                interestApplication.set('selections', interestValues);
-                promises.push(interestApplication.save());
-
-                // 4. 保存培训兴趣 (数组)
-                const trainingInterest = new TrainingInterest();
-                trainingInterest.set('selections', trainingValues);
-                promises.push(trainingInterest.save());
-
-                // 5. 保存建议
+                promises.push(new Satisfaction().set('vote', satisfactionOption.value).save());
+                promises.push(new WordCloud().set('word', wordcloudText).save());
+                promises.push(new InterestApplication().set('selections', interestValues).save());
+                promises.push(new TrainingInterest().set('selections', trainingValues).save());
                 if (suggestionText) {
-                    const suggestion = new Suggestion();
-                    suggestion.set('text', suggestionText);
-                    promises.push(suggestion.save());
+                    promises.push(new Suggestion().set('text', suggestionText).save());
                 }
                 
-                // 并发保存所有数据
                 await Promise.all(promises);
-
                 document.getElementById('feedback-form').reset();
-                alert('感谢您的参与！反馈已成功提交。\nThank you! Your feedback has been submitted successfully.');
+                alert('感谢您的参与！反馈已成功提交。');
 
             } catch (error) {
-                console.error("提交失败 / Submission failed:", error);
-                alert('提交失败，请稍后重试。\nSubmission failed, please try again later.');
+                console.error("提交失败:", error);
+                alert('提交失败，请稍后重试。');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = '提 交 / SUBMIT';
