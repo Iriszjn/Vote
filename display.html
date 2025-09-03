@@ -6,61 +6,14 @@
     <title>MBPTS Tech Journey - 实时反馈 / Live Feedback</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap'); 
-        body { 
-            font-family: 'Poppins', 'Noto Sans SC', sans-serif; 
-            background-color: #f8f9fc; 
-            margin: 0; 
-            padding: 30px; 
-            box-sizing: border-box; 
-        } 
-        .wrapper { 
-            max-width: 1800px; 
-            margin: 0 auto; 
-        } 
-        .header h1 { 
-            font-size: 3rem; 
-            font-weight: 700; 
-            color: #3B82F6; 
-            margin: 0 0 30px 0; 
-            text-align: center; 
-            line-height: 1.3; 
-        } 
-        .main-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); 
-            gap: 30px; 
-        } 
-        .data-panel { 
-            background-color: #ffffff; 
-            border-radius: 20px; 
-            padding: 30px 40px; 
-            box-shadow: 0 10px 40px -10px rgba(100, 116, 139, 0.12); 
-            border: 1px solid #e2e8f0; 
-            display: flex; 
-            flex-direction: column; 
-            min-height: 45vh; 
-        } 
-        .panel-title { 
-            font-size: 1.8rem; 
-            font-weight: 600; 
-            color: #1e293b; 
-            margin: 0 0 25px 0; 
-            padding-bottom: 20px; 
-            border-bottom: 1px solid #f1f5f9; 
-            line-height: 1.4; 
-        } 
-        .content-area { 
-            flex-grow: 1; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center;
-        }
-        .placeholder-text { 
-            text-align: center; 
-            font-size: 1.8rem; 
-            font-weight: 500; 
-            color: #94a3b8; 
-        }
+        body { font-family: 'Poppins', 'Noto Sans SC', sans-serif; background-color: #f8f9fc; margin: 0; padding: 30px; box-sizing: border-box; } 
+        .wrapper { max-width: 1800px; margin: 0 auto; } 
+        .header h1 { font-size: 3rem; font-weight: 700; color: #3B82F6; margin: 0 0 30px 0; text-align: center; line-height: 1.3; } 
+        .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); gap: 30px; } 
+        .data-panel { background-color: #ffffff; border-radius: 20px; padding: 30px 40px; box-shadow: 0 10px 40px -10px rgba(100, 116, 139, 0.12); border: 1px solid #e2e8f0; display: flex; flex-direction: column; min-height: 45vh; } 
+        .panel-title { font-size: 1.8rem; font-weight: 600; color: #1e293b; margin: 0 0 25px 0; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; line-height: 1.4; } 
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .placeholder-text { text-align: center; font-size: 1.8rem; font-weight: 500; color: #94a3b8; }
         /* Satisfaction Bar Styles */
         .result-bar-container { margin-bottom: 1.8rem; }
         .result-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 1.2rem; font-weight: 500; color: #334155; }
@@ -76,7 +29,7 @@
         /* Horizontal Bar Chart Styles (for Q3 & Q4) */
         .bar-chart-container { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
         .bar-item { display: flex; align-items: center; gap: 15px; }
-        .bar-label { flex: 0 0 35%; font-size: 1rem; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bar-label { flex: 0 0 45%; font-size: 1rem; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .bar-wrapper { flex-grow: 1; background-color: #e2e8f0; border-radius: 8px; }
         .bar-itself { height: 28px; border-radius: 8px; background: linear-gradient(90deg, #10b981, #34d399); transition: width 0.5s ease-out; }
         .bar-count { font-size: 1rem; font-weight: 700; color: #1e293b; }
@@ -92,30 +45,22 @@
             <!-- Q1: Satisfaction -->
             <div class="data-panel">
                 <h2 class="panel-title">1. 整体满意度<br><span style="font-size:0.7em; font-weight:500;">Overall Satisfaction</span></h2>
-                <div id="satisfaction-results" class="content-area">
-                    <div class="placeholder-text">加载中...</div>
-                </div>
+                <div id="satisfaction-results" class="content-area"><div class="placeholder-text">加载中...</div></div>
             </div>
             <!-- Q2: Word Cloud -->
             <div class="data-panel">
                 <h2 class="panel-title">2. 感受词云<br><span style="font-size:0.7em; font-weight:500;">Experience in a Word</span></h2>
-                <div id="wordcloud-container" class="content-area">
-                    <div class="placeholder-text">加载中...</div>
-                </div>
+                <div id="wordcloud-container" class="content-area"><div class="placeholder-text">加载中...</div></div>
             </div>
             <!-- Q3: Eager to Apply -->
             <div class="data-panel">
                 <h2 class="panel-title">3. 热点应用排行<br><span style="font-size:0.7em; font-weight:500;">Top Eager-to-Apply Tools</span></h2>
-                <div id="interest-results" class="content-area">
-                    <div class="placeholder-text">加载中...</div>
-                </div>
+                <div id="interest-results" class="content-area"><div class="placeholder-text">加载中...</div></div>
             </div>
             <!-- Q4: Training Interests -->
             <div class="data-panel">
                 <h2 class="panel-title">4. 培训需求洞察<br><span style="font-size:0.7em; font-weight:500;">AI Training Interests</span></h2>
-                <div id="training-results" class="content-area">
-                    <div class="placeholder-text">加载中...</div>
-                </div>
+                <div id="training-results" class="content-area"><div class="placeholder-text">加载中...</div></div>
             </div>
         </div>
     </div>
@@ -128,21 +73,18 @@
             serverURL: "https://slv3fgds.lc-cn-n1-shared.com"
         });
 
-        // Global data stores
         let satisfactionData = [], wordCloudData = [], interestData = [], trainingData = [];
 
-        // --- Q1: Satisfaction Chart ---
         function updateSatisfactionResults() {
             const container = document.getElementById('satisfaction-results');
             const counts = { '非常棒': 0, '还不错': 0, '一般般': 0, '有待改进': 0 };
             satisfactionData.forEach(item => { counts[item.get('vote')]++; });
             const total = satisfactionData.length;
-
             if (total === 0) { container.innerHTML = '<div class="placeholder-text">暂无投票</div>'; return; }
-            container.innerHTML = ''; // Clear existing content
+            container.innerHTML = '';
             Object.keys(counts).forEach(key => {
                 const count = counts[key];
-                const percentage = total > 0 ? (count / total) * 100 : 0;
+                const percentage = (count / total) * 100;
                 const el = document.createElement('div');
                 el.className = 'result-bar-container';
                 el.setAttribute('data-option', key);
@@ -151,31 +93,25 @@
             });
         }
 
-        // --- Q2: Word Cloud ---
         function generateWordCloud() {
             const container = document.getElementById('wordcloud-container');
             const words = wordCloudData.map(item => item.get('word')).filter(Boolean);
             if (words.length === 0) { container.innerHTML = '<div class="placeholder-text">暂无词语</div>'; return; }
             const freq = words.reduce((acc, word) => { acc[word] = (acc[word] || 0) + 1; return acc; }, {});
             const list = Object.entries(freq).map(([text, weight]) => [text, weight * 10]);
-            
-            container.innerHTML = ''; // Clear for redraw
+            container.innerHTML = '';
             WordCloud(container, { list, gridSize: 12, weightFactor: 3, fontFamily: "'Poppins', 'Noto Sans SC', sans-serif", color: 'random-dark', backgroundColor: 'transparent', minSize: 16, shuffle: true, rotateRatio: 0.5, shape: 'circle', ellipticity: 0.65 });
         }
 
-        // --- Q3 & Q4: Reusable Bar Chart Function ---
         function updateBarChart(containerId, data, title) {
             const container = document.getElementById(containerId);
             const allSelections = data.flatMap(item => item.get('selections'));
             if (allSelections.length === 0) { container.innerHTML = `<div class="placeholder-text">暂无${title}</div>`; return; }
-            
             const counts = allSelections.reduce((acc, sel) => { acc[sel] = (acc[sel] || 0) + 1; return acc; }, {});
             const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
             const maxCount = sorted.length > 0 ? sorted[0][1] : 0;
-            
             container.innerHTML = '<div class="bar-chart-container"></div>';
             const chartContainer = container.querySelector('.bar-chart-container');
-            
             sorted.forEach(([label, count]) => {
                 const width = maxCount > 0 ? (count / maxCount) * 100 : 0;
                 const item = document.createElement('div');
@@ -185,31 +121,25 @@
             });
         }
 
-        // --- Main Initialization ---
         async function initialize() {
             try {
-                // Initial fetch and live query for all data types
                 const setupLiveQuery = async (className, dataStore, renderFunc, chartTitle = '') => {
                     const query = new AV.Query(className);
                     const results = await query.limit(1000).find();
                     dataStore.push(...results);
-                    // Pass the chart title only for the bar chart function
-                    if (chartTitle) renderFunc(dataStore, chartTitle); else renderFunc();
-
+                    renderFunc(dataStore, chartTitle);
                     const liveQuery = await query.subscribe();
                     liveQuery.on('create', (obj) => {
                         dataStore.push(obj);
-                        if (chartTitle) renderFunc(dataStore, chartTitle); else renderFunc();
+                        renderFunc(dataStore, chartTitle);
                     });
                 };
-                
                 await Promise.all([
-                    setupLiveQuery('Satisfaction', satisfactionData, updateSatisfactionResults),
-                    setupLiveQuery('WordCloud', wordCloudData, generateWordCloud),
+                    setupLiveQuery('Satisfaction', satisfactionData, () => updateSatisfactionResults()),
+                    setupLiveQuery('WordCloud', wordCloudData, () => generateWordCloud()),
                     setupLiveQuery('InterestApplication', interestData, (d, t) => updateBarChart('interest-results', d, t), '数据'),
                     setupLiveQuery('TrainingInterest', trainingData, (d, t) => updateBarChart('training-results', d, t), '数据')
                 ]);
-
             } catch (error) {
                 console.error("LiveQuery connection failed:", error);
                 alert("实时连接失败，请检查网络或联系管理员。");
