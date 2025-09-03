@@ -5,7 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>活动实时反馈 / Event Live Feedback</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; margin: 0; padding: 20px 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box; } .container { width: 100%; max-width: 600px; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); backdrop-filter: blur(10px); } h1 { font-size: 1.8em; color: #3f51b5; text-align: center; margin: 0 0 25px 0; line-height: 1.3; } .form-section { margin-bottom: 25px; } .question-title { font-size: 1.1em; font-weight: 600; margin-bottom: 15px; color: #555; line-height: 1.4; } .optional-tag { font-size: 0.8em; font-weight: normal; color: #999; } .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; } .options-grid label, .checkbox-group label { cursor: pointer; padding: 12px 5px; border-radius: 10px; background-color: #f1f3f5; border: 1px solid #dee2e6; font-size: 1em; transition: all 0.2s ease-in-out; text-align: center; line-height: 1.3; display: block; } .lang-en { display: block; font-size: 0.8em; color: #555; margin-top: 2px; } input[type="radio"], input[type="checkbox"] { display: none; } input[type="radio"]:checked + label, input[type="checkbox"]:checked + label { background-color: #4c6ef5; color: white; border-color: #4c6ef5; transform: scale(1.05); box-shadow: 0 4px 12px rgba(76, 110, 245, 0.4); } input[type="radio"]:checked + label .lang-en, input[type="checkbox"]:checked + label .lang-en { color: #e0e0e0; } input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1em; margin-top: 5px; box-sizing: border-box; transition: border-color 0.3s, box-shadow 0.3s; } input[type="text"]:focus, textarea:focus { border-color: #4c6ef5; box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.2); outline: none; } button#submit-btn { display: block; width: 100%; padding: 15px; background: linear-gradient(45deg, #4776e6, #8e54e9); color: white; border: none; border-radius: 10px; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-top: 15px; } button#submit-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); } .checkbox-group { display: flex; flex-direction: column; gap: 10px; } fieldset { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; } legend { font-weight: 500; color: #333; padding: 0 10px; } .other-option { display: flex; align-items: center; gap: 10px; margin-top: 10px; } .other-option label { flex-shrink: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; margin: 0; padding: 20px 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box; }
+        .container { width: 100%; max-width: 600px; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); backdrop-filter: blur(10px); }
+        h1 { font-size: 1.8em; color: #3f51b5; text-align: center; margin: 0 0 25px 0; line-height: 1.3; }
+        .form-section { margin-bottom: 25px; }
+        .question-title { font-size: 1.1em; font-weight: 600; margin-bottom: 15px; color: #555; line-height: 1.4; }
+        .optional-tag { font-size: 0.8em; font-weight: normal; color: #999; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .options-grid label, .checkbox-group label { cursor: pointer; padding: 12px 5px; border-radius: 10px; background-color: #f1f3f5; border: 1px solid #dee2e6; font-size: 1em; transition: all 0.2s ease-in-out; text-align: center; line-height: 1.3; display: block; }
+        .lang-en { display: block; font-size: 0.8em; color: #555; margin-top: 2px; }
+        input[type="radio"], input[type="checkbox"] { display: none; }
+        input[type="radio"]:checked + label, input[type="checkbox"]:checked + label { background-color: #4c6ef5; color: white; border-color: #4c6ef5; transform: scale(1.05); box-shadow: 0 4px 12px rgba(76, 110, 245, 0.4); }
+        input[type="radio"]:checked + label .lang-en, input[type="checkbox"]:checked + label .lang-en { color: #e0e0e0; }
+        input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1em; margin-top: 5px; box-sizing: border-box; transition: border-color 0.3s, box-shadow 0.3s; }
+        input[type="text"]:focus, textarea:focus { border-color: #4c6ef5; box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.2); outline: none; }
+        button#submit-btn { display: block; width: 100%; padding: 15px; background: linear-gradient(45deg, #4776e6, #8e54e9); color: white; border: none; border-radius: 10px; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-top: 15px; }
+        button#submit-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); }
+        .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
+        fieldset { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        legend { font-weight: 500; color: #333; padding: 0 10px; }
+        .other-option { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .other-option label { flex-shrink: 0; }
     </style>
 </head>
 <body>
@@ -170,188 +190,6 @@
                 submitBtn.textContent = '提 交 / SUBMIT';
             }
         }
-    </script>
-</body>
-</html>```
-
----
-
-### **第二步：替换实时展示页面 `display (1).html`**
-
-这个文件是改动最大的。它使用了全新的布局和新增的条形图来展示所有四个核心问题的数据。
-
-```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MBPTS Tech Journey - 实时反馈 / Live Feedback</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap'); 
-        body { font-family: 'Poppins', 'Noto Sans SC', sans-serif; background-color: #f8f9fc; margin: 0; padding: 30px; box-sizing: border-box; } 
-        .wrapper { max-width: 1800px; margin: 0 auto; } 
-        .header h1 { font-size: 3rem; font-weight: 700; color: #3B82F6; margin: 0 0 30px 0; text-align: center; line-height: 1.3; } 
-        .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); gap: 30px; } 
-        .data-panel { background-color: #ffffff; border-radius: 20px; padding: 30px 40px; box-shadow: 0 10px 40px -10px rgba(100, 116, 139, 0.12); border: 1px solid #e2e8f0; display: flex; flex-direction: column; min-height: 45vh; } 
-        .panel-title { font-size: 1.8rem; font-weight: 600; color: #1e293b; margin: 0 0 25px 0; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; line-height: 1.4; } 
-        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
-        .placeholder-text { text-align: center; font-size: 1.8rem; font-weight: 500; color: #94a3b8; }
-        /* Satisfaction Bar Styles */
-        .result-bar-container { margin-bottom: 1.8rem; }
-        .result-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 1.2rem; font-weight: 500; color: #334155; }
-        .result-label .percentage { font-weight: 700; color: #475569; }
-        .result-bar { background-color: #e2e8f0; border-radius: 10px; height: 22px; overflow: hidden; }
-        .result-bar div { height: 100%; border-radius: 10px; transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
-        [data-option="非常棒"] .result-bar div { background: linear-gradient(90deg, #2563eb, #3b82f6); }
-        [data-option="还不错"] .result-bar div { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
-        [data-option="一般般"] .result-bar div { background: linear-gradient(90deg, #64748b, #94a3b8); }
-        [data-option="有待改进"] .result-bar div { background: linear-gradient(90deg, #ef4444, #f87171); }
-        /* Word Cloud Styles */
-        #wordcloud-container { width: 100%; height: 100%; }
-        /* Horizontal Bar Chart Styles (for Q3 & Q4) */
-        .bar-chart-container { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
-        .bar-item { display: flex; align-items: center; gap: 15px; }
-        .bar-label { flex: 0 0 35%; font-size: 1rem; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .bar-wrapper { flex-grow: 1; background-color: #e2e8f0; border-radius: 8px; }
-        .bar-itself { height: 28px; border-radius: 8px; background: linear-gradient(90deg, #10b981, #34d399); transition: width 0.5s ease-out; }
-        .bar-count { font-size: 1rem; font-weight: 700; color: #1e293b; }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
-</head>
-<body>
-    <div class="wrapper">
-        <header class="header">
-            <h1>MBPTS Tech Journey<br><span style="font-size:0.7em; font-weight:500;">实时反馈 / Live Feedback</span></h1>
-        </header>
-        <div class="main-grid">
-            <!-- Q1: Satisfaction -->
-            <div class="data-panel">
-                <h2 class="panel-title">1. 整体满意度<br><span style="font-size:0.7em; font-weight:500;">Overall Satisfaction</span></h2>
-                <div id="satisfaction-results" class="content-area">
-                    <div class="placeholder-text">加载中...</div>
-                </div>
-            </div>
-            <!-- Q2: Word Cloud -->
-            <div class="data-panel">
-                <h2 class="panel-title">2. 感受词云<br><span style="font-size:0.7em; font-weight:500;">Experience in a Word</span></h2>
-                <div id="wordcloud-container" class="content-area">
-                    <div class="placeholder-text">加载中...</div>
-                </div>
-            </div>
-            <!-- Q3: Eager to Apply -->
-            <div class="data-panel">
-                <h2 class="panel-title">3. 热点应用排行<br><span style="font-size:0.7em; font-weight:500;">Top Eager-to-Apply Tools</span></h2>
-                <div id="interest-results" class="content-area">
-                    <div class="placeholder-text">加载中...</div>
-                </div>
-            </div>
-            <!-- Q4: Training Interests -->
-            <div class="data-panel">
-                <h2 class="panel-title">4. 培训需求洞察<br><span style="font-size:0.7em; font-weight:500;">AI Training Interests</span></h2>
-                <div id="training-results" class="content-area">
-                    <div class="placeholder-text">加载中...</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="//cdn.jsdelivr.net/npm/leancloud-storage/dist/av-live-query-min.js"></script>
-    <script>
-        AV.init({
-            appId: "Slv3fGdSSxRZxOzM5la2ZCyD-gzGzoHsz",
-            appKey: "XcUAt5yfUPWQlEpLBdXLcJHW",
-            serverURL: "https://slv3fgds.lc-cn-n1-shared.com"
-        });
-
-        // Global data stores
-        let satisfactionData = [], wordCloudData = [], interestData = [], trainingData = [];
-
-        // --- Q1: Satisfaction Chart ---
-        function updateSatisfactionResults() {
-            const container = document.getElementById('satisfaction-results');
-            const counts = { '非常棒': 0, '还不错': 0, '一般般': 0, '有待改进': 0 };
-            satisfactionData.forEach(item => { counts[item.get('vote')]++; });
-            const total = satisfactionData.length;
-
-            if (total === 0) { container.innerHTML = '<div class="placeholder-text">暂无投票</div>'; return; }
-            container.innerHTML = ''; // Clear existing content
-            Object.keys(counts).forEach(key => {
-                const count = counts[key];
-                const percentage = total > 0 ? (count / total) * 100 : 0;
-                const el = document.createElement('div');
-                el.className = 'result-bar-container';
-                el.setAttribute('data-option', key);
-                el.innerHTML = `<div class="result-label"><span>${key}</span><span class="percentage">${count} 票 (${percentage.toFixed(1)}%)</span></div><div class="result-bar"><div style="width: ${percentage}%;"></div></div>`;
-                container.appendChild(el);
-            });
-        }
-
-        // --- Q2: Word Cloud ---
-        function generateWordCloud() {
-            const container = document.getElementById('wordcloud-container');
-            const words = wordCloudData.map(item => item.get('word')).filter(Boolean);
-            if (words.length === 0) { container.innerHTML = '<div class="placeholder-text">暂无词语</div>'; return; }
-            const freq = words.reduce((acc, word) => { acc[word] = (acc[word] || 0) + 1; return acc; }, {});
-            const list = Object.entries(freq).map(([text, weight]) => [text, weight * 10]);
-            
-            container.innerHTML = ''; // Clear for redraw
-            WordCloud(container, { list, gridSize: 12, weightFactor: 3, fontFamily: "'Poppins', 'Noto Sans SC', sans-serif", color: 'random-dark', backgroundColor: 'transparent', minSize: 16, shuffle: true, rotateRatio: 0.5, shape: 'circle', ellipticity: 0.65 });
-        }
-
-        // --- Q3 & Q4: Reusable Bar Chart Function ---
-        function updateBarChart(containerId, data, title) {
-            const container = document.getElementById(containerId);
-            const allSelections = data.flatMap(item => item.get('selections'));
-            if (allSelections.length === 0) { container.innerHTML = `<div class="placeholder-text">暂无${title}</div>`; return; }
-            
-            const counts = allSelections.reduce((acc, sel) => { acc[sel] = (acc[sel] || 0) + 1; return acc; }, {});
-            const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-            const maxCount = sorted.length > 0 ? sorted[0][1] : 0;
-            
-            container.innerHTML = '<div class="bar-chart-container"></div>';
-            const chartContainer = container.querySelector('.bar-chart-container');
-            
-            sorted.forEach(([label, count]) => {
-                const width = maxCount > 0 ? (count / maxCount) * 100 : 0;
-                const item = document.createElement('div');
-                item.className = 'bar-item';
-                item.innerHTML = `<div class="bar-label" title="${label}">${label}</div><div class="bar-wrapper"><div class="bar-itself" style="width: ${width}%;"></div></div><div class="bar-count">${count}</div>`;
-                chartContainer.appendChild(item);
-            });
-        }
-
-        // --- Main Initialization ---
-        async function initialize() {
-            try {
-                // Initial fetch and live query for all data types
-                const setupLiveQuery = async (className, dataStore, renderFunc, chartTitle = '') => {
-                    const query = new AV.Query(className);
-                    const results = await query.limit(1000).find();
-                    dataStore.push(...results);
-                    renderFunc(dataStore, chartTitle);
-
-                    const liveQuery = await query.subscribe();
-                    liveQuery.on('create', (obj) => {
-                        dataStore.push(obj);
-                        renderFunc(dataStore, chartTitle);
-                    });
-                };
-                
-                await Promise.all([
-                    setupLiveQuery('Satisfaction', satisfactionData, () => updateSatisfactionResults()),
-                    setupLiveQuery('WordCloud', wordCloudData, () => generateWordCloud()),
-                    setupLiveQuery('InterestApplication', interestData, (d, t) => updateBarChart('interest-results', d, t), '数据'),
-                    setupLiveQuery('TrainingInterest', trainingData, (d, t) => updateBarChart('training-results', d, t), '数据')
-                ]);
-
-            } catch (error) {
-                console.error("LiveQuery connection failed:", error);
-                alert("实时连接失败，请检查网络或联系管理员。");
-            }
-        }
-
-        initialize();
     </script>
 </body>
 </html>
