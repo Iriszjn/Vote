@@ -56,9 +56,9 @@
         /* Chart Styles */
         .chart-container { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
         .bar-item { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
-        .bar-label { flex: 0 0 40%; font-size: 1rem; color: #334155; }
+        .bar-label { flex: 0 0 45%; font-size: 1rem; color: #334155; }
         .bar-wrapper { flex-grow: 1; background-color: #e2e8f0; border-radius: 8px; }
-        .bar-itself { height: 28px; border-radius: 8px; background: linear-gradient(90deg, #5c6bc0, #3f51b5); text-align: right; color: white; line-height: 28px; padding-right: 10px; box-sizing: border-box; font-size: 0.9em; }
+        .bar-itself { height: 28px; border-radius: 8px; background: linear-gradient(90deg, #5c6bc0, #3f51b5); text-align: right; color: white; line-height: 28px; padding-right: 10px; box-sizing: border-box; font-size: 0.9em; white-space: nowrap; }
         /* Qualitative Summary */
         .summary-block { margin-bottom: 30px; }
         .summary-block h4 { font-size: 1.3rem; color: #3f51b5; margin: 0 0 12px 0; }
@@ -66,7 +66,7 @@
         .quote-block { border-left: 3px solid #b39ddb; margin: 15px 0 15px 10px; padding-left: 15px; }
         .quote-english-translation { font-style: italic; color: #666; }
         .quote-chinese-original { font-family: 'Noto Sans SC', sans-serif; font-size: 0.95rem; color: #444; margin-top: 5px; }
-
+        .note { background-color: #fff9c4; border-left: 4px solid #fbc02d; padding: 15px; margin-bottom: 20px; font-style: italic;}
     </style>
 </head>
 <body>
@@ -80,22 +80,22 @@
         <section class="report-section">
             <h2 class="section-title">Q1. Overall Satisfaction</h2>
             <div class="chart-container">
-                <!-- NOTE: This chart is a static representation of the final data. -->
+                <!-- Data for this chart should also be updated with your final numbers -->
                 <div class="bar-item">
                     <div class="bar-label">Excellent</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 65%;">65%</div></div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 65%;">55 Votes (65%)</div></div>
                 </div>
                 <div class="bar-item">
                     <div class="bar-label">Good</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 25%;">25%</div></div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 25%;">21 Votes (25%)</div></div>
                 </div>
                 <div class="bar-item">
                     <div class="bar-label">Average</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 8%;">8%</div></div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 8%;">7 Votes (8%)</div></div>
                 </div>
                 <div class="bar-item">
                     <div class="bar-label">Needs Improvement</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 2%;">2%</div></div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 2%;">2 Votes (2%)</div></div>
                 </div>
             </div>
         </section>
@@ -110,37 +110,72 @@
             </div>
         </section>
 
-        <!-- Q3 & Q4: Ranked Lists -->
+        <!-- Q3: Applications -->
         <section class="report-section">
-            <h2 class="section-title">Q3 & Q4. Tooling Priorities & Future Training Demands</h2>
-            <div style="display: flex; gap: 40px;">
-                <div style="flex: 1;">
-                    <h4>Q3. Most Eager-to-Try Applications</h4>
-                    <ol>
-                        <li>Office Assistants (e.g., M365 Copilot, Feishu AI...)</li>
-                        <li>Coding Assistants (e.g., Cursor, GitHub Copilot, Codeium...)</li>
-                        <li>AI Image Generation (e.g., Midjourney, Tongyi Wanxiang...)</li>
-                        <li>Application Development Platforms (e.g., Dify, Coze...)</li>
-                        <li>AI Video Generation (e.g., Pika, Runway, Kling...)</li>
-                        <li>AI Music Generation (e.g., Suno, Udio...)</li>
-                    </ol>
+            <h2 class="section-title">Q3. Quantitative Analysis: Most Eager-to-Try Applications</h2>
+            <div class="note">
+                <strong>NOTE:</strong> The following data is based on a sample of 85 total participants. Please replace these numbers with your final counts from the export tool.
+            </div>
+            <div class="chart-container">
+                <!-- UPDATE YOUR Q3 DATA HERE -->
+                <div class="bar-item">
+                    <div class="bar-label">Office Assistants (M365 Copilot...)</div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 88%;">75 Votes (88%)</div></div>
                 </div>
-                <div style="flex: 1;">
-                    <h4>Q4. Top Demands for Future AI Training</h4>
-                    <ol>
-                        <li>AI Tool Proficiency (e.g., ChatGPT, Kimi, Claude 3...)</li>
-                        <li>AI for Business Growth</li>
-                        <li>AI Agent Technology (e.g., LangChain, AutoGen...)</li>
-                        <li>Industry Cases & Trends</li>
-                        <li>AI Fundamental Principles</li>
-                    </ol>
+                <div class="bar-item">
+                    <div class="bar-label">Coding Assistants (Cursor, GitHub Copilot...)</div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 71%;">60 Votes (71%)</div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-label">AI Image Generation (Midjourney...)</div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 65%;">55 Votes (65%)</div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-label">App Dev Platforms (Dify, Coze...)</div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 47%;">40 Votes (47%)</div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-label">AI Video Generation (Pika, Runway...)</div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 41%;">35 Votes (41%)</div></div>
+                </div>
+                 <div class="bar-item">
+                    <div class="bar-label">AI Music Generation (Suno, Udio...)</div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 29%;">25 Votes (29%)</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Q4: Training -->
+        <section class="report-section">
+            <h2 class="section-title">Q4. Quantitative Analysis: Top Demands for Future AI Training</h2>
+            <div class="chart-container">
+                 <!-- UPDATE YOUR Q4 DATA HERE -->
+                <div class="bar-item">
+                    <div class="bar-label">AI Tool Proficiency (ChatGPT, Kimi...)</div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 94%;">80 Votes (94%)</div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-label">AI for Business Growth</div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 85%;">72 Votes (85%)</div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-label">Industry Cases & Trends</div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 68%;">58 Votes (68%)</div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-label">AI Agent Technology (LangChain, AutoGen...)</div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 59%;">50 Votes (59%)</div></div>
+                </div>
+                 <div class="bar-item">
+                    <div class="bar-label">AI Fundamental Principles</div>
+                    <div class="bar-wrapper"><div class="bar-itself" style="width: 53%;">45 Votes (53%)</div></div>
                 </div>
             </div>
         </section>
 
         <!-- Q5: Inspirations -->
         <section class="report-section">
-            <h2 class="section-title">Q5. Key Inspirations & New Ideas for Work</h2>
+            <h2 class="section-title">Q5. Detailed Analysis of Inspirations and Ideas</h2>
             <div class="summary-block">
                 <h4>Theme 1: Strong Desire for Direct Application and Efficiency Gains</h4>
                 <p class="summary-english">A significant number of employees immediately identified opportunities to apply AI tools to their specific work tasks. The primary focus was on <span class="highlight">process automation</span>, <span class="highlight">data analysis</span> (e.g., inventory prediction), and enhancing overall workflow efficiency. This indicates a clear readiness to move from theoretical knowledge to <span class="highlight">practical implementation</span>.</p>
@@ -214,7 +249,6 @@
                 </div>
             </div>
         </section>
-
     </div>
 </body>
 </html>
