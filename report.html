@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MBPTS Tech Journey - Final Feedback Report</title>
+    <title>MBPTS Tech Journey - Live Feedback Report</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500&display=swap');
@@ -38,6 +38,27 @@
             color: #555;
             margin-top: 10px;
         }
+        .key-metrics {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 20px;
+            background-color: #e8eaf6;
+            border-radius: 8px;
+        }
+        .metric {
+            flex: 1;
+        }
+        .metric-value {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #3f51b5;
+        }
+        .metric-label {
+            font-size: 1rem;
+            color: #333;
+        }
         .report-section {
             margin-bottom: 50px;
         }
@@ -58,7 +79,20 @@
         .bar-item { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
         .bar-label { flex: 0 0 45%; font-size: 1rem; color: #334155; }
         .bar-wrapper { flex-grow: 1; background-color: #e2e8f0; border-radius: 8px; }
-        .bar-itself { height: 28px; border-radius: 8px; background: linear-gradient(90deg, #5c6bc0, #3f51b5); text-align: right; color: white; line-height: 28px; padding-right: 10px; box-sizing: border-box; font-size: 0.9em; white-space: nowrap; }
+        .bar-itself { height: 28px; border-radius: 8px; background: linear-gradient(90deg, #5c6bc0, #3f51b5); text-align: right; color: white; line-height: 28px; padding-right: 10px; box-sizing: border-box; font-size: 0.9em; white-space: nowrap; transition: width 0.5s ease-out; }
+        /* Word Cloud */
+        #wordcloud-container { width: 100%; height: 400px; border: 1px solid #eee; border-radius: 8px; }
+        /* "Others" section */
+        .others-section {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #fafafa;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .others-title { font-weight: bold; margin-bottom: 10px; font-size: 1.1rem; }
+        .others-list { list-style-type: disc; padding-left: 20px; margin: 0; }
+        .others-list li { margin-bottom: 8px; }
         /* Qualitative Summary */
         .summary-block { margin-bottom: 30px; }
         .summary-block h4 { font-size: 1.3rem; color: #3f51b5; margin: 0 0 12px 0; }
@@ -66,189 +100,296 @@
         .quote-block { border-left: 3px solid #b39ddb; margin: 15px 0 15px 10px; padding-left: 15px; }
         .quote-english-translation { font-style: italic; color: #666; }
         .quote-chinese-original { font-family: 'Noto Sans SC', sans-serif; font-size: 0.95rem; color: #444; margin-top: 5px; }
-        .note { background-color: #fff9c4; border-left: 4px solid #fbc02d; padding: 15px; margin-bottom: 20px; font-style: italic;}
+        .placeholder { text-align: center; padding: 50px; color: #888; font-size: 1.2rem; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
 </head>
 <body>
     <div class="report-container">
         <header>
-            <h1>MBPTS Tech Journey - Final Feedback Report</h1>
-            <p>A comprehensive summary of employee feedback collected during the event. This report highlights key takeaways, inspirations, and actionable suggestions to guide future AI initiatives.</p>
+            <h1>MBPTS Tech Journey - Live Feedback Report</h1>
+            <p>This report is dynamically generated with the latest data. Last updated: <span id="last-updated">...</span></p>
         </header>
 
-        <!-- Q1: Satisfaction -->
-        <section class="report-section">
-            <h2 class="section-title">Q1. Overall Satisfaction</h2>
-            <div class="chart-container">
-                <!-- Data for this chart should also be updated with your final numbers -->
-                <div class="bar-item">
-                    <div class="bar-label">Excellent</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 65%;">55 Votes (65%)</div></div>
-                </div>
-                <div class="bar-item">
-                    <div class="bar-label">Good</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 25%;">21 Votes (25%)</div></div>
-                </div>
-                <div class="bar-item">
-                    <div class="bar-label">Average</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 8%;">7 Votes (8%)</div></div>
-                </div>
-                <div class="bar-item">
-                    <div class="bar-label">Needs Improvement</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 2%;">2 Votes (2%)</div></div>
-                </div>
+        <section class="key-metrics">
+            <div class="metric">
+                <div id="total-participants" class="metric-value">-</div>
+                <div class="metric-label">Total Participants</div>
             </div>
+            <div class="metric">
+                <div id="positive-satisfaction" class="metric-value">- %</div>
+                <div class="metric-label">Positive Satisfaction Rate<br>(Excellent + Good)</div>
+            </div>
+        </section>
+
+        <!-- All sections below will be populated by the script -->
+        <section id="q1-section" class="report-section">
+            <h2 class="section-title">Q1. Overall Satisfaction</h2>
+            <div id="satisfaction-chart" class="chart-container"><div class="placeholder">Loading data...</div></div>
         </section>
         
-        <!-- Q2: Keywords -->
-        <section class="report-section">
+        <section id="q2-section" class="report-section">
             <h2 class="section-title">Q2. Executive Summary of Employee Impressions</h2>
-            <div class="summary-block">
-                <p class="summary-english">
-                    The overall sentiment was overwhelmingly positive. Employee feedback clustered around four main themes. The event was predominantly described as <span class="highlight">Inspiring and Thought-Provoking</span>, sparking new ideas and a sense of urgency. It was also widely seen as <span class="highlight">Cutting-Edge and Innovative</span>, showcasing relevant and novel technologies. A significant number of participants found the sessions <span class="highlight">Interesting and Fun</span>, praising the engaging and "cool" content. Finally, the <span class="highlight">Practical</span> and <span class="highlight">Informative</span> nature of the presentations was a frequently mentioned highlight.
-                </p>
+            <div id="wordcloud-summary" class="summary-block"></div>
+            <div id="wordcloud-container"><div class="placeholder">Loading data...</div></div>
+        </section>
+
+        <section id="q3-section" class="report-section">
+            <h2 class="section-title">Q3. Most Eager-to-Try Applications</h2>
+            <div id="interest-chart" class="chart-container"><div class="placeholder">Loading data...</div></div>
+            <div id="interest-others" class="others-section" style="display: none;">
+                <h4 class="others-title">"Other" Submissions:</h4>
+                <ul id="interest-others-list" class="others-list"></ul>
             </div>
         </section>
 
-        <!-- Q3: Applications -->
-        <section class="report-section">
-            <h2 class="section-title">Q3. Quantitative Analysis: Most Eager-to-Try Applications</h2>
-            <div class="note">
-                <strong>NOTE:</strong> The following data is based on a sample of 85 total participants. Please replace these numbers with your final counts from the export tool.
-            </div>
-            <div class="chart-container">
-                <!-- UPDATE YOUR Q3 DATA HERE -->
-                <div class="bar-item">
-                    <div class="bar-label">Office Assistants (M365 Copilot...)</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 88%;">75 Votes (88%)</div></div>
-                </div>
-                <div class="bar-item">
-                    <div class="bar-label">Coding Assistants (Cursor, GitHub Copilot...)</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 71%;">60 Votes (71%)</div></div>
-                </div>
-                <div class="bar-item">
-                    <div class="bar-label">AI Image Generation (Midjourney...)</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 65%;">55 Votes (65%)</div></div>
-                </div>
-                <div class="bar-item">
-                    <div class="bar-label">App Dev Platforms (Dify, Coze...)</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 47%;">40 Votes (47%)</div></div>
-                </div>
-                <div class="bar-item">
-                    <div class="bar-label">AI Video Generation (Pika, Runway...)</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 41%;">35 Votes (41%)</div></div>
-                </div>
-                 <div class="bar-item">
-                    <div class="bar-label">AI Music Generation (Suno, Udio...)</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 29%;">25 Votes (29%)</div></div>
-                </div>
+        <section id="q4-section" class="report-section">
+            <h2 class="section-title">Q4. Top Demands for Future AI Training</h2>
+            <div id="training-chart" class="chart-container"><div class="placeholder">Loading data...</div></div>
+            <div id="training-others" class="others-section" style="display: none;">
+                <h4 class="others-title">"Other" Submissions:</h4>
+                <ul id="training-others-list" class="others-list"></ul>
             </div>
         </section>
 
-        <!-- Q4: Training -->
-        <section class="report-section">
-            <h2 class="section-title">Q4. Quantitative Analysis: Top Demands for Future AI Training</h2>
-            <div class="chart-container">
-                 <!-- UPDATE YOUR Q4 DATA HERE -->
-                <div class="bar-item">
-                    <div class="bar-label">AI Tool Proficiency (ChatGPT, Kimi...)</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 94%;">80 Votes (94%)</div></div>
-                </div>
-                <div class="bar-item">
-                    <div class="bar-label">AI for Business Growth</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 85%;">72 Votes (85%)</div></div>
-                </div>
-                <div class="bar-item">
-                    <div class="bar-label">Industry Cases & Trends</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 68%;">58 Votes (68%)</div></div>
-                </div>
-                <div class="bar-item">
-                    <div class="bar-label">AI Agent Technology (LangChain, AutoGen...)</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 59%;">50 Votes (59%)</div></div>
-                </div>
-                 <div class="bar-item">
-                    <div class="bar-label">AI Fundamental Principles</div>
-                    <div class="bar-wrapper"><div class="bar-itself" style="width: 53%;">45 Votes (53%)</div></div>
-                </div>
-            </div>
+        <section id="q5-section" class="report-section">
+            <h2 class="section-title">Q5. Key Inspirations & New Ideas for Work</h2>
+            <div id="inspirations-summary"><div class="placeholder">Loading data...</div></div>
         </section>
 
-        <!-- Q5: Inspirations -->
-        <section class="report-section">
-            <h2 class="section-title">Q5. Detailed Analysis of Inspirations and Ideas</h2>
-            <div class="summary-block">
-                <h4>Theme 1: Strong Desire for Direct Application and Efficiency Gains</h4>
-                <p class="summary-english">A significant number of employees immediately identified opportunities to apply AI tools to their specific work tasks. The primary focus was on <span class="highlight">process automation</span>, <span class="highlight">data analysis</span> (e.g., inventory prediction), and enhancing overall workflow efficiency. This indicates a clear readiness to move from theoretical knowledge to <span class="highlight">practical implementation</span>.</p>
-                <div class="quote-block">
-                    <p class="quote-english-translation">"I see possibilities to use AI and improve efficiency in my work."</p>
-                    <p class="quote-chinese-original">“我看到在我的工作中有可能用到AI和提升效率的地方”</p>
-                </div>
-                <div class="quote-block">
-                    <p class="quote-english-translation">"For supply chain efficiency: getting scores and suggestions, autonomous analysis, risk control, and predictive warnings."</p>
-                    <p class="quote-chinese-original">“供应链上下游AI 提效，能提问给打分给建议，能给自主分析，风险管控，预测预警”</p>
-                </div>
-                 <div class="quote-block">
-                    <p class="quote-english-translation">"I want to quickly learn the specific usage of AI tools and apply them to my actual work and studies."</p>
-                    <p class="quote-chinese-original">“想赶快学习AI工具具体的使用方法并应用到实际的工作学习中”</p>
-                </div>
-            </div>
-
-            <div class="summary-block">
-                <h4>Theme 2: Fostering a New Mindset for Innovation and Action</h4>
-                <p class="summary-english">The event successfully inspired a <span class="highlight">proactive and innovative mindset</span>. Employees expressed a newfound motivation to experiment, start with small changes, and <span class="highlight">combine multiple tools</span> for better results. This shift from passive learning to active problem-solving is a key outcome.</p>
-                 <div class="quote-block">
-                    <p class="quote-english-translation">"It encourages bold experimentation with existing AI resources."</p>
-                    <p class="quote-chinese-original">“可以大胆的多尝试现有的AI资源”</p>
-                </div>
-                 <div class="quote-block">
-                    <p class="quote-english-translation">"The transformation from 0 to 1 begins with being observant in life; AI empowerment also starts from small things, changing and forming new habits of thought and action."</p>
-                    <p class="quote-chinese-original">“从0到1的转变从做生活的有心人开始，AI赋能也从身边的小处着眼，改变和形成新的思维和行为习惯。”</p>
-                </div>
-            </div>
-
-             <div class="summary-block">
-                <h4>Theme 3: Call for Empowerment through Tool Access & Resources</h4>
-                <p class="summary-english">A recurring point of feedback was the gap between inspiration and available resources. Employees are eager to use advanced tools, particularly <span class="highlight">M365 Copilot</span>, but are often hindered by a <span class="highlight">lack of access</span>. There is a clear request for the company to provide and officially support a wider range of AI tools.</p>
-                <div class="quote-block">
-                    <p class="quote-english-translation">"I'm already using some free AI tools. I am very keen to try Copilot to assist with daily work, but I've never had the permission."</p>
-                    <p class="quote-chinese-original">“一些免费的AI工具已经在用。很希望尝试Copilot来协助处理日常工作，但一直没有权限。”</p>
-                </div>
-                <div class="quote-block">
-                    <p class="quote-english-translation">"Hoping for more tools to be provided that can be used directly, without us having to find them ourselves."</p>
-                    <p class="quote-chinese-original">“希望可以提供更多的tool，可以直接使用，不需要自己去找。”</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Q6: Suggestions -->
-        <section class="report-section">
+        <section id="q6-section" class="report-section">
             <h2 class="section-title">Q6. Actionable Suggestions for Future Initiatives</h2>
-            <div class="summary-block">
-                <h4>Theme 1: Demand for More Frequent, Hands-on, and Job-Relevant Training</h4>
-                <p class="summary-english">The most common suggestion is to increase the frequency of AI sessions (e.g., <span class="highlight">quarterly</span>). There is a strong demand for more practical, <span class="highlight">hands-on workshops</span> and for training content to be <span class="highlight">tailored to MBPTS's specific business cases</span> to make the learning more direct, tangible, and immediately applicable.</p>
-                <div class="quote-block">
-                    <p class="quote-english-translation">"Hope that future training content can be more aligned with MBPTS's work, for example, using our actual cases as examples would be more intuitive and engaging."</p>
-                    <p class="quote-chinese-original">“希望以后的培训内容能跟MBPTS的工作内容更贴合一些，比如以咱们实际的case为例子给大家讲解会更直观生动。”</p>
-                </div>
-                <div class="quote-block">
-                    <p class="quote-english-translation">"Could we arrange some training that is more suitable for beginners and non-IT staff?"</p>
-                    <p class="quote-chinese-original">“可否今后安排一些比较适合新手，普通员工非IT人员的培训？”</p>
-                </div>
-            </div>
-
-            <div class="summary-block">
-                <h4>Theme 2: Call for Broader Tool Access and Building a Learning Culture</h4>
-                <p class="summary-english">Employees see official <span class="highlight">tool access</span> as a critical next step. The request to provide M365 Copilot access to all employees was explicitly mentioned. Beyond tools, there are suggestions to foster a <span class="highlight">continuous learning culture</span> through organized channels, such as internal interest groups, regular seminars, and even external learning visits to other companies.</p>
-                <div class="quote-block">
-                    <p class="quote-english-translation">"Can Copilot access be popularized for all employees?"</p>
-                    <p class="quote-chinese-original">“copolit权限可以全员普及么”</p>
-                </div>
-                 <div class="quote-block">
-                    <p class="quote-english-translation">"Suggest organizing group visits to see AI application examples at other companies for reference and on-site learning, which would be more inspiring. Also, interest group regular seminars, creating chat groups for sharing..."</p>
-                    <p class="quote-chinese-original">“建议组团参观其他企业AI应用实例，借鉴参考实地学习，更有启发性。兴趣小组定期研讨会，建群分享。。。”</p>
-                </div>
-            </div>
+            <div id="suggestions-summary"><div class="placeholder">Loading data...</div></div>
         </section>
     </div>
+
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage/dist/av-live-query-min.js"></script>
+    <script>
+        AV.init({
+            appId: "Slv3fGdSSxRZxOzM5la2ZCyD-gzGzoHsz",
+            appKey: "XcUAt5yfUPWQlEpLBdXLcJHW",
+            serverURL: "https://slv3fgds.lc-cn-n1-shared.com"
+        });
+
+        window.onload = async function generateReport() {
+            try {
+                document.getElementById('last-updated').textContent = new Date().toLocaleString();
+                const query = (className) => new AV.Query(className).limit(1000).find();
+                const [satis, words, interests, trainings, inspirations, suggs] = await Promise.all([
+                    query('Satisfaction'), query('WordCloud'), query('InterestApplication'),
+                    query('TrainingInterest'), query('Inspiration'), query('Suggestion')
+                ]);
+
+                // Render all sections with fetched data
+                renderKeyMetrics(satis);
+                renderSatisfaction(satis);
+                renderWordCloud(words);
+                renderRankedChoice('interest-chart', 'interest-others', interests);
+                renderRankedChoice('training-chart', 'training-others', trainings);
+                renderQualitativeSummary('inspirations-summary', inspirations, getInspirationThemes());
+                renderQualitativeSummary('suggestions-summary', suggs, getSuggestionThemes());
+
+            } catch (error) {
+                console.error("Failed to generate report:", error);
+                document.body.innerHTML = '<h1>Error: Failed to fetch data from the server. Please check the console for details.</h1>';
+            }
+        };
+
+        function renderKeyMetrics(data) {
+            const total = data.length;
+            document.getElementById('total-participants').textContent = total;
+            
+            if (total > 0) {
+                const positiveVotes = data.filter(i => i.get('vote') === '非常棒' || i.get('vote') === '还不错').length;
+                const positiveRate = ((positiveVotes / total) * 100).toFixed(1);
+                document.getElementById('positive-satisfaction').textContent = `${positiveRate} %`;
+            } else {
+                document.getElementById('positive-satisfaction').textContent = `0 %`;
+            }
+        }
+        
+        function renderSatisfaction(data) {
+            const container = document.getElementById('satisfaction-chart');
+            const counts = { '非常棒': 0, '还不错': 0, '一般般': 0, '有待改进': 0 };
+            const labels = { '非常棒': 'Excellent', '还不错': 'Good', '一般般': 'Average', '有待改进': 'Needs Improvement' };
+            data.forEach(item => { counts[item.get('vote')]++; });
+            const total = data.length;
+            
+            if (total === 0) { container.innerHTML = '<div class="placeholder">No data available.</div>'; return; }
+            container.innerHTML = '';
+            
+            Object.keys(counts).forEach(key => {
+                const count = counts[key];
+                const percentage = total > 0 ? (count / total) * 100 : 0;
+                const el = document.createElement('div');
+                el.className = 'bar-item';
+                el.innerHTML = `
+                    <div class="bar-label">${labels[key]}</div>
+                    <div class="bar-wrapper">
+                        <div class="bar-itself" style="width: ${percentage}%;">${count} Votes (${percentage.toFixed(1)}%)</div>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+        }
+        
+        function renderWordCloud(data) {
+            const summaryContainer = document.getElementById('wordcloud-summary');
+            summaryContainer.innerHTML = `<p class="summary-english">The overall sentiment was overwhelmingly positive. Employee feedback clustered around four main themes. The event was predominantly described as <span class="highlight">Inspiring and Thought-Provoking</span>, sparking new ideas and a sense of urgency. It was also widely seen as <span class="highlight">Cutting-Edge and Innovative</span>, showcasing relevant and novel technologies. A significant number of participants found the sessions <span class="highlight">Interesting and Fun</span>, praising the engaging and "cool" content. Finally, the <span class="highlight">Practical</span> and <span class="highlight">Informative</span> nature of the presentations was a frequently mentioned highlight.</p>`;
+            
+            const cloudContainer = document.getElementById('wordcloud-container');
+            const words = data.map(item => item.get('word')).filter(Boolean);
+            if (words.length === 0) { cloudContainer.innerHTML = '<div class="placeholder">No data available.</div>'; return; }
+            const freq = words.reduce((acc, word) => { acc[word] = (acc[word] || 0) + 1; return acc; }, {});
+            const list = Object.entries(freq).map(([text, weight]) => [text, weight * 10]);
+            WordCloud(cloudContainer, { list, gridSize: 10, weightFactor: 4, fontFamily: 'Roboto, Noto Sans SC', color: 'random-dark', backgroundColor: '#fff', minSize: 15 });
+        }
+
+        function renderRankedChoice(chartId, othersId, data) {
+            const chartContainer = document.getElementById(chartId);
+            const othersContainer = document.getElementById(othersId);
+            const othersList = document.getElementById(othersId + '-list');
+
+            const allSelections = data.flatMap(item => item.get('selections'));
+            if (allSelections.length === 0) { chartContainer.innerHTML = '<div class="placeholder">No data available.</div>'; return; }
+
+            const counts = allSelections.reduce((acc, sel) => { acc[sel] = (acc[sel] || 0) + 1; return acc; }, {});
+            const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+            const totalVotes = allSelections.length - (counts['其他'] || 0); // Exclude "Other" from percentage calculation base
+            
+            chartContainer.innerHTML = '';
+            othersList.innerHTML = '';
+            let hasOthers = false;
+
+            sorted.forEach(([label, count]) => {
+                if (label.startsWith('其他:')) {
+                    hasOthers = true;
+                    const li = document.createElement('li');
+                    li.textContent = label.substring(3).trim();
+                    othersList.appendChild(li);
+                } else {
+                    const percentage = totalVotes > 0 ? (count / data.length) * 100 : 0; // % of people who voted for this
+                    const item = document.createElement('div');
+                    item.className = 'bar-item';
+                    item.innerHTML = `
+                        <div class="bar-label" title="${label}">${label}</div>
+                        <div class="bar-wrapper">
+                             <div class="bar-itself" style="width: ${percentage}%;">${count} Votes (${percentage.toFixed(1)}% of Participants)</div>
+                        </div>
+                    `;
+                    chartContainer.appendChild(item);
+                }
+            });
+
+            if(hasOthers) othersContainer.style.display = 'block';
+        }
+        
+        function getInspirationThemes() {
+            return [
+                {
+                    title: "Theme 1: Strong Desire for Direct Application and Efficiency Gains",
+                    keywords: ['效率', '自动', '项目', '供应链', 'DIFY', '工作', '应用', '预测'],
+                    summary: `A significant number of employees immediately identified opportunities to apply AI tools to their specific work tasks. The primary focus was on <span class="highlight">process automation</span>, <span class="highlight">data analysis</span> (e.g., inventory prediction), and enhancing overall workflow efficiency. This indicates a clear readiness to move from theoretical knowledge to <span class="highlight">practical implementation</span>.`
+                },
+                {
+                    title: "Theme 2: Fostering a New Mindset for Innovation and Action",
+                    keywords: ['大胆', '0到1', '思维', '结合', '参考', '习惯'],
+                    summary: `The event successfully inspired a <span class="highlight">proactive and innovative mindset</span>. Employees expressed a newfound motivation to experiment, start with small changes, and <span class="highlight">combine multiple tools</span> for better results. This shift from passive learning to active problem-solving is a key outcome.`
+                },
+                {
+                    title: "Theme 3: Call for Empowerment through Tool Access & Resources",
+                    keywords: ['Copilot', '权限', '提供', '工具'],
+                    summary: `A recurring point of feedback was the gap between inspiration and available resources. Employees are eager to use advanced tools, particularly <span class="highlight">M365 Copilot</span>, but are often hindered by a <span class="highlight">lack of access</span>. There is a clear request for the company to provide and officially support a wider range of AI tools.`
+                }
+            ];
+        }
+
+        function getSuggestionThemes() {
+             return [
+                {
+                    title: "Theme 1: Demand for More Frequent, Hands-on, and Job-Relevant Training",
+                    keywords: ['季度', '贴合', 'case', '例子', '细节', '技术化', '新手', '非IT', '培训', '课程', 'workshop'],
+                    summary: `The most common suggestion is to increase the frequency of AI sessions (e.g., <span class="highlight">quarterly</span>). There is a strong demand for more practical, <span class="highlight">hands-on workshops</span> and for training content to be <span class="highlight">tailored to MBPTS's specific business cases</span> to make the learning more direct, tangible, and immediately applicable.`
+                },
+                {
+                    title: "Theme 2: Call for Broader Tool Access and Building a Learning Culture",
+                    keywords: ['权限', '全员', '开放', '参观', '借鉴', '兴趣小组', '建群', '分享平台'],
+                    summary: `Employees see official <span class="highlight">tool access</span> as a critical next step. The request to provide M365 Copilot access to all employees was explicitly mentioned. Beyond tools, there are suggestions to foster a <span class="highlight">continuous learning culture</span> through organized channels, such as internal interest groups, regular seminars, and even external learning visits to other companies.`
+                }
+            ];
+        }
+
+        function renderQualitativeSummary(containerId, data, themes) {
+            const container = document.getElementById(containerId);
+            const texts = data.map(item => item.get('text')).filter(Boolean);
+
+            if (texts.length === 0) { container.innerHTML = '<div class="placeholder">No data available.</div>'; return; }
+            
+            // Add a temporary "Uncategorized" theme
+            const allThemes = [...themes, { title: "Other Feedback", keywords: [], summary: "General comments and feedback not fitting into the primary themes.", quotes: [] }];
+            
+            const categorizedQuotes = allThemes.map(t => ({...t, quotes: []}));
+
+            texts.forEach(text => {
+                let isCategorized = false;
+                for (let i = 0; i < themes.length; i++) {
+                    for (const keyword of themes[i].keywords) {
+                        if (text.toLowerCase().includes(keyword.toLowerCase())) {
+                            categorizedQuotes[i].quotes.push(text);
+                            isCategorized = true;
+                            break;
+                        }
+                    }
+                    if (isCategorized) break;
+                }
+                if (!isCategorized) {
+                    categorizedQuotes[categorizedQuotes.length - 1].quotes.push(text); // Add to "Other Feedback"
+                }
+            });
+
+            container.innerHTML = '';
+            categorizedQuotes.forEach(theme => {
+                if (theme.quotes.length > 0) {
+                    const block = document.createElement('div');
+                    block.className = 'summary-block';
+                    
+                    let quotesHTML = '';
+                    // Display up to 3 quotes as examples
+                    theme.quotes.slice(0, 3).forEach(quote => {
+                        quotesHTML += `
+                            <div class="quote-block">
+                                <p class="quote-english-translation">"${getEnglishTranslation(quote)}"</p>
+                                <p class="quote-chinese-original">“${quote}”</p>
+                            </div>`;
+                    });
+
+                    block.innerHTML = `
+                        <h4>${theme.title} (${theme.quotes.length} related comments)</h4>
+                        <p class="summary-english">${theme.summary}</p>
+                        ${quotesHTML}
+                    `;
+                    container.appendChild(block);
+                }
+            });
+        }
+
+        function getEnglishTranslation(chineseQuote) {
+            const translations = {
+                "我看到在我的工作中有可能用到AI和提升效率的地方": "I see possibilities to use AI and improve efficiency in my work.",
+                "供应链上下游AI 提效，能提问给打分给建议，能给自主分析，风险管控，预测预警": "For supply chain efficiency: getting scores and suggestions, autonomous analysis, risk control, and predictive warnings.",
+                "想赶快学习AI工具具体的使用方法并应用到实际的工作学习中": "I want to quickly learn the specific usage of AI tools and apply them to my actual work and studies.",
+                "可以大胆的多尝试现有的AI资源": "It encourages bold experimentation with existing AI resources.",
+                "从0到1的转变从做生活的有心人开始，AI赋能也从身边的小处着眼，改变和形成新的思维和行为习惯。": "The transformation from 0 to 1 begins with being observant in life; AI empowerment also starts from small things, changing and forming new habits of thought and action.",
+                "一些免费的AI工具已经在用。很希望尝试Copilot来协助处理日常工作，但一直没有权限。": "I'm already using some free AI tools. I am very keen to try Copilot to assist with daily work, but I've never had the permission.",
+                "希望可以提供更多的tool，可以直接使用，不需要自己去找。": "Hoping for more tools to be provided that can be used directly, without us having to find them ourselves.",
+                "希望以后的培训内容能跟MBPTS的工作内容更贴合一些，比如以咱们实际的case为例子给大家讲解会更直观生动。": "Hope that future training content can be more aligned with MBP-TS's work, for example, using our actual cases as examples would be more intuitive and engaging.",
+                "可否今后安排一些比较适合新手，普通员工非IT人员的培训？": "Could we arrange some training that is more suitable for beginners and non-IT staff?",
+                "copolit权限可以全员普及么": "Can Copilot access be popularized for all employees?",
+                "建议组团参观其他企业AI应用实例，借鉴参考实地学习，更有启发性。兴趣小组定期研讨会，建群分享。。。": "Suggest organizing group visits to see AI application examples at other companies for reference and on-site learning, which would be more inspiring. Also, interest group regular seminars, creating chat groups for sharing..."
+            };
+            return translations[chineseQuote] || "[Translation not available]";
+        }
+
+    </script>
 </body>
 </html>
