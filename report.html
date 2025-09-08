@@ -77,7 +77,9 @@
         /* Chart Styles */
         .chart-container { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
         .bar-item { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
-        .bar-label { flex: 0 0 45%; font-size: 1rem; color: #334155; }
+        .bar-label { flex: 0 0 50%; font-size: 1rem; color: #334155; }
+        .bar-label .label-en { font-weight: 500; }
+        .bar-label .label-cn { font-size: 0.9em; color: #666; font-family: 'Noto Sans SC', sans-serif;}
         .bar-wrapper { flex-grow: 1; background-color: #e2e8f0; border-radius: 8px; }
         .bar-itself { height: 28px; border-radius: 8px; background: linear-gradient(90deg, #5c6bc0, #3f51b5); text-align: right; color: white; line-height: 28px; padding-right: 10px; box-sizing: border-box; font-size: 0.9em; white-space: nowrap; transition: width 0.5s ease-out; }
         /* Word Cloud */
@@ -171,6 +173,24 @@
             serverURL: "https://slv3fgds.lc-cn-n1-shared.com"
         });
 
+        // --- BILINGUAL LABEL MAPPINGS ---
+        const Q3_LABELS_EN = {
+            "应用开发 (Dify, Coze, Vercel AI SDK...)": "App Development",
+            "办公助理 (M365 Copilot, 飞书智能伙伴...)": "Office Assistants",
+            "代码辅助 (Cursor, GitHub Copilot, Codeium...)": "Coding Assistants",
+            "AI 音乐 (Suno, Udio, Stable Audio...)": "AI Music Generation",
+            "AI 图像 (Midjourney, 通义万相, DALL-E 3...)": "AI Image Generation",
+            "AI 视频 (Pika, Runway, Kling, Sora...)": "AI Video Generation"
+        };
+        const Q4_LABELS_EN = {
+            "AI 工具提效 (ChatGPT, Kimi, Claude 3, Gemini...)": "AI Tool Proficiency",
+            "AI Agent 技术 (LangChain, AutoGen, CrewAI...)": "AI Agent Technology",
+            "AI 行业案例与趋势": "Industry Cases & Trends",
+            "AI 赋能业务增长": "AI for Business Growth",
+            "AI 技术原理入门": "AI Fundamental Principles"
+        };
+
+
         window.onload = async function generateReport() {
             try {
                 document.getElementById('last-updated').textContent = new Date().toLocaleString();
@@ -184,8 +204,8 @@
                 renderKeyMetrics(satis);
                 renderSatisfaction(satis);
                 renderWordCloud(words);
-                renderRankedChoice('interest-chart', 'interest-others', interests);
-                renderRankedChoice('training-chart', 'training-others', trainings);
+                renderRankedChoice('interest-chart', 'interest-others', interests, Q3_LABELS_EN);
+                renderRankedChoice('training-chart', 'training-others', trainings, Q4_LABELS_EN);
                 renderQualitativeSummary('inspirations-summary', inspirations, getInspirationThemes());
                 renderQualitativeSummary('suggestions-summary', suggs, getSuggestionThemes());
 
@@ -245,7 +265,7 @@
             WordCloud(cloudContainer, { list, gridSize: 10, weightFactor: 4, fontFamily: 'Roboto, Noto Sans SC', color: 'random-dark', backgroundColor: '#fff', minSize: 15 });
         }
 
-        function renderRankedChoice(chartId, othersId, data) {
+        function renderRankedChoice(chartId, othersId, data, labelMap) {
             const chartContainer = document.getElementById(chartId);
             const othersContainer = document.getElementById(othersId);
             const othersList = document.getElementById(othersId + '-list');
@@ -255,7 +275,6 @@
 
             const counts = allSelections.reduce((acc, sel) => { acc[sel] = (acc[sel] || 0) + 1; return acc; }, {});
             const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-            const totalVotes = allSelections.length - (counts['其他'] || 0); // Exclude "Other" from percentage calculation base
             
             chartContainer.innerHTML = '';
             othersList.innerHTML = '';
@@ -268,11 +287,15 @@
                     li.textContent = label.substring(3).trim();
                     othersList.appendChild(li);
                 } else {
-                    const percentage = totalVotes > 0 ? (count / data.length) * 100 : 0; // % of people who voted for this
+                    const percentage = data.length > 0 ? (count / data.length) * 100 : 0;
+                    const englishLabel = labelMap[label] || label;
                     const item = document.createElement('div');
                     item.className = 'bar-item';
                     item.innerHTML = `
-                        <div class="bar-label" title="${label}">${label}</div>
+                        <div class="bar-label" title="${label}">
+                            <div class="label-en">${englishLabel}</div>
+                            <div class="label-cn">${label}</div>
+                        </div>
                         <div class="bar-wrapper">
                              <div class="bar-itself" style="width: ${percentage}%;">${count} Votes (${percentage.toFixed(1)}% of Participants)</div>
                         </div>
@@ -284,6 +307,7 @@
             if(hasOthers) othersContainer.style.display = 'block';
         }
         
+        // --- THEME DEFINITIONS ---
         function getInspirationThemes() {
             return [
                 {
@@ -293,7 +317,7 @@
                 },
                 {
                     title: "Theme 2: Fostering a New Mindset for Innovation and Action",
-                    keywords: ['大胆', '0到1', '思维', '结合', '参考', '习惯'],
+                    keywords: ['大胆', '0到1', '思维', '结合', '参考', '习惯', '转变'],
                     summary: `The event successfully inspired a <span class="highlight">proactive and innovative mindset</span>. Employees expressed a newfound motivation to experiment, start with small changes, and <span class="highlight">combine multiple tools</span> for better results. This shift from passive learning to active problem-solving is a key outcome.`
                 },
                 {
@@ -308,7 +332,7 @@
              return [
                 {
                     title: "Theme 1: Demand for More Frequent, Hands-on, and Job-Relevant Training",
-                    keywords: ['季度', '贴合', 'case', '例子', '细节', '技术化', '新手', '非IT', '培训', '课程', 'workshop'],
+                    keywords: ['季度', '贴合', 'case', '例子', '细节', '技术化', '新手', '非IT', '培训', '课程', 'workshop', '实践', '落地'],
                     summary: `The most common suggestion is to increase the frequency of AI sessions (e.g., <span class="highlight">quarterly</span>). There is a strong demand for more practical, <span class="highlight">hands-on workshops</span> and for training content to be <span class="highlight">tailored to MBPTS's specific business cases</span> to make the learning more direct, tangible, and immediately applicable.`
                 },
                 {
@@ -319,15 +343,14 @@
             ];
         }
 
+        // --- RENDER & TRANSLATE QUALITATIVE DATA ---
         function renderQualitativeSummary(containerId, data, themes) {
             const container = document.getElementById(containerId);
             const texts = data.map(item => item.get('text')).filter(Boolean);
 
             if (texts.length === 0) { container.innerHTML = '<div class="placeholder">No data available.</div>'; return; }
             
-            // Add a temporary "Uncategorized" theme
-            const allThemes = [...themes, { title: "Other Feedback", keywords: [], summary: "General comments and feedback not fitting into the primary themes.", quotes: [] }];
-            
+            const allThemes = [...themes, { title: "Other Feedback", keywords: [], summary: "General comments and feedback not fitting into the primary themes."}];
             const categorizedQuotes = allThemes.map(t => ({...t, quotes: []}));
 
             texts.forEach(text => {
@@ -343,7 +366,7 @@
                     if (isCategorized) break;
                 }
                 if (!isCategorized) {
-                    categorizedQuotes[categorizedQuotes.length - 1].quotes.push(text); // Add to "Other Feedback"
+                    categorizedQuotes[categorizedQuotes.length - 1].quotes.push(text);
                 }
             });
 
@@ -354,8 +377,7 @@
                     block.className = 'summary-block';
                     
                     let quotesHTML = '';
-                    // Display up to 3 quotes as examples
-                    theme.quotes.slice(0, 3).forEach(quote => {
+                    theme.quotes.slice(0, 3).forEach(quote => { // Display up to 3 quotes per theme
                         quotesHTML += `
                             <div class="quote-block">
                                 <p class="quote-english-translation">"${getEnglishTranslation(quote)}"</p>
@@ -372,24 +394,49 @@
                 }
             });
         }
-
+        
+        // --- COMPREHENSIVE TRANSLATION DICTIONARY ---
         function getEnglishTranslation(chineseQuote) {
             const translations = {
-                "我看到在我的工作中有可能用到AI和提升效率的地方": "I see possibilities to use AI and improve efficiency in my work.",
-                "供应链上下游AI 提效，能提问给打分给建议，能给自主分析，风险管控，预测预警": "For supply chain efficiency: getting scores and suggestions, autonomous analysis, risk control, and predictive warnings.",
-                "想赶快学习AI工具具体的使用方法并应用到实际的工作学习中": "I want to quickly learn the specific usage of AI tools and apply them to my actual work and studies.",
-                "可以大胆的多尝试现有的AI资源": "It encourages bold experimentation with existing AI resources.",
-                "从0到1的转变从做生活的有心人开始，AI赋能也从身边的小处着眼，改变和形成新的思维和行为习惯。": "The transformation from 0 to 1 begins with being observant in life; AI empowerment also starts from small things, changing and forming new habits of thought and action.",
-                "一些免费的AI工具已经在用。很希望尝试Copilot来协助处理日常工作，但一直没有权限。": "I'm already using some free AI tools. I am very keen to try Copilot to assist with daily work, but I've never had the permission.",
-                "希望可以提供更多的tool，可以直接使用，不需要自己去找。": "Hoping for more tools to be provided that can be used directly, without us having to find them ourselves.",
-                "希望以后的培训内容能跟MBPTS的工作内容更贴合一些，比如以咱们实际的case为例子给大家讲解会更直观生动。": "Hope that future training content can be more aligned with MBP-TS's work, for example, using our actual cases as examples would be more intuitive and engaging.",
-                "可否今后安排一些比较适合新手，普通员工非IT人员的培训？": "Could we arrange some training that is more suitable for beginners and non-IT staff?",
-                "copolit权限可以全员普及么": "Can Copilot access be popularized for all employees?",
-                "建议组团参观其他企业AI应用实例，借鉴参考实地学习，更有启发性。兴趣小组定期研讨会，建群分享。。。": "Suggest organizing group visits to see AI application examples at other companies for reference and on-site learning, which would be more inspiring. Also, interest group regular seminars, creating chat groups for sharing..."
-            };
-            return translations[chineseQuote] || "[Translation not available]";
-        }
+                // Q5 Inspirations
+                "对库存的准确预测": "For accurate inventory prediction.",
+                "可以大胆的多尝试现有的AI资源": "We can boldly try more of the existing AI resources.",
+                "我看到在我的工作中有可能用到AI和提升效率的地方": "I see areas in my work where AI can be used to improve efficiency.",
+                "PDC outbound process auto run": "Automating the PDC outbound process.",
+                "希望可以提供更多的tool，可以直接使用，不需要自己去找。": "I hope more tools can be provided that we can use directly, without having to search for them ourselves.",
+                "期待后续能尽快使用M365 Copilit": "I look forward to using M365 Copilot as soon as possible.",
+                "更多可行的AI技术可以实际在工作生活中应用": "More feasible AI technologies can be applied in our actual work and life.",
+                "大胆去做": "Just do it boldly.",
+                "可以使用powerautomate把IE部门海运预报创建自动化，但是目前powerautomate是block了提取PDF数据生成excel文件。": "We could use Power Automate to automate the creation of ocean freight forecasts for the IE department, but currently Power Automate is blocked from extracting PDF data to generate Excel files.",
+                "DIFY may support me to do some complicated tasks.": "DIFY may support me in doing some complicated tasks.",
+                "想赶快学习AI工具具体的使用方法并应用到实际的工作学习中": "I want to quickly learn the specific methods of using AI tools and apply them to my actual work and studies.",
+                "一些免费的AI工具已经在用。很希望尝试Copilot来协助处理日常工作，但一直没有权限。": "I am already using some free AI tools. I am very keen to try Copilot to assist with daily work, but I've never had the permission.",
+                "工具很重要，需要应用工具来提高效率": "Tools are very important; we need to apply them to improve efficiency.",
+                "非常希望尝试下学习和使用这种新型工具用在自己的工作中。": "I am very eager to try learning and using this new type of tool in my own work.",
+                "从0到1的转变从做生活的有心人开始，AI赋能也从身边的小处着眼，改变和形成新的思维和行为习惯。": "The transformation from 0 to 1 begins with being observant in life; AI empowerment also starts from small things around us, changing and forming new habits of thought and action.",
+                "供应链上下游AI 提效，能提问给打分给建议，能给自主分析，风险管控，预测预警": "For supply chain AI efficiency: the ability to ask questions, get scores and suggestions, conduct autonomous analysis, manage risks, and provide predictive warnings.",
+                "还需要不断学习": "There is still a continuous need for learning.",
+                "可以利用AI提高效率，平时也会多关注AI方面的信息": "We can use AI to improve efficiency, and I will pay more attention to AI-related information in my daily routine.",
+                "1：多个AI工具结合，更好的提效（例如deepseek+kimi做PPT）。2：参考其他平台对于AI技术的应用案例经验，评估工作领域的优化空间，比如机器人客服，物流实时查询，做到信息更及时准确。": "1: Combine multiple AI tools for better efficiency (e.g., DeepSeek + Kimi for PPTs). 2: Reference other platforms' AI application cases to evaluate optimization opportunities in our work domain, such as robot customer service and real-time logistics tracking, to make information more timely and accurate.",
 
+                // Q6 Suggestions
+                "可以的话，每个季度都能有一场这样的AI分享会👍": "If possible, it would be great to have an AI sharing session like this every quarter.",
+                "希望继续": "Hope this continues.",
+                "期待定期举办！": "Looking forward to this being held regularly!",
+                "期待更多实际应用的培训落地": "I look forward to more training on practical applications being implemented.",
+                "很好": "Very good.",
+                "针对具体的自动化工具，是否可以邀请相关领域的专家，更加细节且技术化的讲解，让感兴趣的同事也能入门学习。": "For specific automation tools, could we invite experts in the field for more detailed and technical explanations, so that interested colleagues can also get started?",
+                "公司开放一些AI工具，提供员工线上或线下的培训课程": "The company should open up some AI tools and provide online or offline training courses for employees.",
+                "希望以后的培训内容能跟MBPTS的工作内容更贴合一些，比如以咱们实际的case为例子给大家讲解会更直观生动。": "I hope that future training content can be more aligned with MBPTS's work; for example, using our actual cases as examples would be more intuitive and engaging.",
+                "目前的介绍专业性太强，可否今后安排一些比较适合新手，普通员工非IT人员的培训？": "The current introductions are too technical. Could we arrange some training in the future that is more suitable for beginners and non-IT staff?",
+                "希望以后可以有更多这样讲座或者培训。": "I hope there can be more lectures or training sessions like this in the future.",
+                "未来有多一些AI工具的线上线下培训": "Hoping for more online and offline training on AI tools in the future.",
+                "建议组团参观其他企业AI应用实例，借鉴参考实地学习，更有启发性。\n兴趣小组定期研讨会，建群分享。。。": "I suggest organizing group visits to see AI application examples at other companies for reference and on-site learning, which would be more inspiring. Also, creating interest groups for regular seminars and chat groups for sharing...",
+                "有平台可以规律规范的分享AI技术和应用相关的前沿知识，AI在行业内的应用案例和趋势。这次的科技周就很棒。": "It would be great to have a platform for regularly sharing cutting-edge knowledge on AI technology and applications, industry case studies, and trends. This Tech Week was excellent for that.",
+                "copolit权限可以全员普及么": "Can Copilot access be made available to all employees?"
+            };
+            return translations[chineseQuote] || chineseQuote; // Fallback to original quote if no translation is found
+        }
     </script>
 </body>
 </html>
